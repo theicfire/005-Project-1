@@ -40,22 +40,23 @@ public class SequencePlayerTest {
             player.addNote(new Pitch('C').transpose(Pitch.OCTAVE).toMidiNote(), 32*3 + 4, 32*3 + 8);
             player.addNote(new Pitch('C').transpose(Pitch.OCTAVE).toMidiNote(), 32*3 + 8, 32*3 + 12);
             
-            player.addNote(new Pitch('G').toMidiNote(), 10, 1);
-            player.addNote(new Pitch('G').toMidiNote(), 10, 1);
-            player.addNote(new Pitch('G').toMidiNote(), 10, 1);
+            player.addNote(new Pitch('G').toMidiNote(), 32*3 + 12, 32*3 + 16);
+            player.addNote(new Pitch('G').toMidiNote(), 32*3 + 16, 32*3 + 20);
+            player.addNote(new Pitch('G').toMidiNote(), 32*3 + 20, 32*3 + 24);
             
-            player.addNote(new Pitch('E').toMidiNote(), 10, 1);
-            player.addNote(new Pitch('E').toMidiNote(), 10, 1);
-            player.addNote(new Pitch('E').toMidiNote(), 10, 1);
+            player.addNote(new Pitch('E').toMidiNote(), 32*3 + 24, 32*3 + 28);
+            player.addNote(new Pitch('E').toMidiNote(), 32*3 + 28, 32*3 + 32);
+            player.addNote(new Pitch('E').toMidiNote(), 32*3 + 32, 32*3 + 36);
             
-            player.addNote(new Pitch('C').toMidiNote(), 10, 1);
-            player.addNote(new Pitch('C').toMidiNote(), 10, 1);
-            player.addNote(new Pitch('C').toMidiNote(), 10, 1);
+            player.addNote(new Pitch('C').toMidiNote(), 32*3 + 36, 32*3 + 40);
+            player.addNote(new Pitch('C').toMidiNote(), 32*3 + 40, 32*3 + 44);
+            player.addNote(new Pitch('C').toMidiNote(), 32*3 + 44, 32*3 + 48);
             
-            player.addNote(new Pitch('F').toMidiNote(), 11, 1);
-            player.addNote(new Pitch('E').toMidiNote(), 12, 1);
-            player.addNote(new Pitch('D').toMidiNote(), 13, 1);
-            player.addNote(new Pitch('C').toMidiNote(), 14, 1);
+            player.addNote(new Pitch('G').toMidiNote(), 32*3 + 48, 32*3 + 48 + 9);
+            player.addNote(new Pitch('F').toMidiNote(), 32*3 + 48 + 9, 32*3 + 48 + 9 + 3);
+            player.addNote(new Pitch('E').toMidiNote(), 32*3 + 60, 32*3 + 69);
+            player.addNote(new Pitch('D').toMidiNote(), 32*3 + 69, 32*3 + 72);
+            player.addNote(new Pitch('C').toMidiNote(), 32*3 + 72, 32*3 + 72 + 24);
 
             System.out.println(player);
 
