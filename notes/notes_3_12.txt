@@ -1,0 +1,76 @@
+Notes:
+	Visitor?
+	Interpreter?
+	
+	Visitor:
+		The visitor object can keep track of global state, like timing
+	Interpreter:
+		We have to pass around global state to each "play method"
+	
+	Hm.....
+	We're not sure.... we still have to decide
+	
+	
+	
+	
+	Also, timing is going to be difficult... ticks per minute
+	tick needs to be a small enough fraction of time to play the shortest note we see
+	
+	
+	
+Classes:
+
+	Playable ---->
+		An interface, maybe a lightweight one, simply for polymorphism purposes
+		
+		@abstractmethod
+		accept //if visitor
+		play? //if interpreter
+
+	TuneSequence(Playable):
+		playables --> a list of playables that will be played, one after another
+		
+	TuneParallel(Playable):
+		playables --> a list of playables to play, all starting at the same tick
+		
+	TunePrimitive(Playable):
+		durationNumerator --> self explanatory
+		durationDenominator --> self explanatory
+		
+	Note(TunePrimitive):
+		notevalue --> the actual note to play
+		
+	Rest(TunePrimitive):
+		--
+		
+	RepeatableTuneSequence(TuneSequence):
+		body --> list of playables to play as the body
+		ending1 --> list of playables to play as the first ending
+		ending2 --> list of playables to play as the second ending
+		
+	Tuple(TuneSequence):
+		multiplierNumerator --> how much to multiply the contents duration by (num)
+		multiplierDenominator --> how much to multiply the contents duration by (denom)
+		primitives --> a list of primitives to have in the tuple
+		
+	Bar(TuneSequence):
+		playables --> a list of playables
+		
+	Chord(TuneParallel):
+		notes --> a list of notes in the chord
+		
+		
+		
+Parser:
+
+
+	takes in a list of tokens, creates a tree of music with the data strucutres described above
+	implements some logic
+	ideas on what it should do
+	- Maintain a KeySignature class that gives MIDInotes for a given text note
+		- have a global one, and one that is local to bars and can be changed
+	- Somehow find out what the shortest note is, and use that for the primitive tick value
+	
+	
+	we need a list of tokens
+	
