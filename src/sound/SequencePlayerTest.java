@@ -16,7 +16,7 @@ import javax.sound.midi.MidiUnavailableException;
 import org.junit.Test;
 
 public class SequencePlayerTest {
-
+	@Test
 	public void testPlaySample1() {
 		SequencePlayer player;
         try {
