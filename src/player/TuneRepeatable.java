@@ -38,5 +38,10 @@ public class TuneRepeatable extends TuneSequence {
 			
 	}
 	
+	@Override
+	public void accept(SchedulableVisitor v) {
+		v.visit(this);
+	}
+	
 	
 }

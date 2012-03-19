@@ -2,10 +2,10 @@ package player;
 
 /*
  * Fraction class for handling durations (to avoid any floating point nonsense)
+ * we ?need? to add tests
+ * toInt method will throw an error if it doesn't represent an integer...
+ * this will be helpfil for debugging timing issues
  */
-
-
-
 public class Fraction {
 
 	public int num;
@@ -16,7 +16,6 @@ public class Fraction {
 		dom = d;
 	}
 
-	
 	public Fraction add(Fraction f) {
 		
 		int left_num = num * f.dom;

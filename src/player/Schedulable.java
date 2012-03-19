@@ -1,9 +1,14 @@
 package player;
 
-public class Schedulable {
 
-	public void accept(SchedulableVisitor v) {
-		v.visit(this);
-	}
+/*
+ * the schedulable super class
+ * defines the accept method
+ * so that a SchedulableVisitor 
+ * can come and visit
+ */
+public interface Schedulable {
+
+	public void accept(SchedulableVisitor v);
 	
 }

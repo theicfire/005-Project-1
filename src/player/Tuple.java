@@ -20,5 +20,10 @@ public class Tuple extends TuneSequence {
 		}
 	}
 	
+	@Override
+	public void accept(SchedulableVisitor v) {
+		v.visit(this);
+	}
+	
 	
 }
