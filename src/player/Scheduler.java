@@ -30,14 +30,14 @@ public class Scheduler implements SchedulableVisitor{
 	}
 	// IMPLAMENT WHEN KNOW HOW DO
 	public void visit(Tuple t) {
+		int startClock = clock;
 		Fraction frac = t.multiplier;
 		for (Schedulable s : t) {
-			
+			s.accept(this);
+			int diff = clock - startClock;
+			diff = frac.times(diff).toInt();
+			clock += diff;			
 		}
-	}
-	// IMPLAMENT WHEN KNOW HOW DO
-	public void visit(Chord currentChord) {
-		
 	}
 	
 	public void visit(TunePrimitive p) {
