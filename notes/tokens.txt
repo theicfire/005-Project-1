@@ -1,0 +1,16 @@
+KEY			VALUE
+
+VOICE			<voice>
+NOTE			<name:[A-G],octave,numerator,denominator>
+ACCIDENTAL		<note,modifier>
+REST			<numerator,denominator>
+STARTCHORD		null
+ENDCHORD		null
+STARTTUPLET 	<notecount>
+ENDTUPLET		null
+STARTSECTION	null
+STARTBAR		null
+STARTREPEAT		null
+ENDSECTION		null
+ENDBAR			null
+ENDREPEAT		null
