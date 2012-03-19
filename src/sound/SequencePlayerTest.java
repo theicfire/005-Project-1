@@ -21,8 +21,7 @@ public class SequencePlayerTest {
 		SequencePlayer player;
         try {
 
-            // create a new player, with 120 beats (i.e. quarter note) per
-            // minute, with 2 tick per quarter note
+
             player = new SequencePlayer(140, 12);
 
             player.addNote(new Pitch('C').toMidiNote(), 0, 4*3);
@@ -87,8 +86,7 @@ public class SequencePlayerTest {
 		SequencePlayer player;
         try {
 
-            // create a new player, with 120 beats (i.e. quarter note) per
-            // minute, with 2 tick per quarter note
+    
             player = new SequencePlayer(200, 12);
 
             player.addNote(new Pitch('E').transpose(Pitch.OCTAVE).toMidiNote(), 0, 6);
