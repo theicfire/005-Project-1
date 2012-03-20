@@ -80,6 +80,12 @@ public class ABCParseEnvironment {
 		}
 	}
 	
+	public void repeatizeTop() {
+		//replaces the top elemented of the current stack
+		//with a reapeat that has the prior top element as its first element
+		
+	}
+	
 
 }
 

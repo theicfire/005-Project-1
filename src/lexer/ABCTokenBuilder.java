@@ -31,7 +31,29 @@ public class ABCTokenBuilder {
 		return this;
 	}
 	
-	// TODO: more
+	public ABCTokenBuilder setNoteName(char c) {
+		check();
+		obj.noteName = c;
+		return this;
+	}
+	
+	public ABCTokenBuilder setNoteOctave(int o) {
+		check();
+		obj.noteOctave = o;
+		return this;
+	}
+	
+	public ABCTokenBuilder increaseOctave() {
+		check();
+		obj.noteOctave += 1;
+		return this;
+	}
+	
+	public ABCTokenBuilder decreaseOctave() {
+		check();
+		obj.noteOctave -= 1;
+		return this;
+	}
 	
 	private void check() {
         if (done) {

@@ -28,7 +28,7 @@ public class ABCToken {
 	public String voiceName;
 	
 	// [A-G]
-	public String noteName;
+	public char noteName;
 	
 	/*noteOctave is a number that tells how many octaves from middle C we are
 	 * C --> 0
@@ -40,7 +40,9 @@ public class ABCToken {
 	
 	public Fraction noteDuration;
 	
-	public String accNote;
+	public char accNote;
+	
+	// =, ^, _
 	public String accModifier;
 	
 	public Fraction restDuration;
@@ -52,8 +54,15 @@ public class ABCToken {
 		// builder takes care of everything
 	}
 	
+	@Override
 	public String toString() {
-		// more needed...
-		return "ABCToken: " + lexeme + " headerKey " + headerKey + " headerValue " + headerValue;
+		return "ABCToken [lexeme=" + lexeme + ", headerKey=" + headerKey
+				+ ", headerValue=" + headerValue + ", voiceName=" + voiceName
+				+ ", noteName=" + noteName + ", noteOctave=" + noteOctave
+				+ ", noteDuration=" + noteDuration + ", accNote=" + accNote
+				+ ", accModifier=" + accModifier + ", restDuration="
+				+ restDuration + ", startTupletNoteCount="
+				+ startTupletNoteCount + ", multiEndingNumber="
+				+ multiEndingNumber + "]\n";
 	}
 }
