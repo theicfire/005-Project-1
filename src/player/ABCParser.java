@@ -110,7 +110,7 @@ public class ABCParser {
 				env.checkBody();
 				
 				//replaces the barKeySig with the new one
-				env.barKeySig = env.barKeySig.fromAccidental(token.accNote,token.accModifier);
+				env.barKeySig = env.barKeySig.fromAccidental(token.accNote,token.accModifier,0);
 				break;
 				
 			case REST:
@@ -165,10 +165,7 @@ public class ABCParser {
 				env.checkBody();
 				
 				//close the old section, open the new section
-				TuneSequence newSection = new TuneSequence();
-				env.curStack.pop(); //close the old one
-				env.curStack.peek().add(newSection);
-				env.curStack.push(newSection);
+				env.newSection();
 				break;
 				
 			case STARTBAR:
@@ -181,11 +178,26 @@ public class ABCParser {
 			case STARTREPEAT:
 				env.checkBody();
 				
-				env.repeatizeTop();
+				if (env.inRepeat) {
+					throw new ABCParserException("Cannot have STARTREPEAT inside a repeat");
+				}
 				
+				env.repeatizeTop();
+				env.inRepeat = true;
+				break;
 				
 			case MULTIENDING:
+				if (!env.inRepeat) {
+					env.repeatizeTop();
+					env.inRepeat = true;
+				}
+				
+				//now close and open a section
+				env.newSection();
+				break;
+				
 			case ENDSECTION:
+				//do nothing for now... we cannot have an end section without a 
 			case ENDBAR:
 			case ENDREPEAT:
 			}
