@@ -77,31 +77,113 @@ public class ABCParser {
 			case VOICE:
 				
 				if (!env.inBody) {
-					env.voiceSequenceMap.put(token.voiceName, new TuneSequence());
+					//the new stack for this voice
+					Stack<TuneSequence> newStack = new Stack<TuneSequence>();
+					//linking the voice to it
+					env.voiceStackMap.put(token.voiceName, newStack);
+					
+					//the base sequence for this voice
+					TuneSequence baseSequence = new TuneSequence();
+					//the first sequence within this voice
+					TuneSequence firstSequence = new TuneSequence();
+					baseSequence.add(firstSequence);
+					newStack.push(baseSequence);
+					newStack.push(firstSequence);
+					
 				}
-				env.curSeq = env.voiceSequenceMap.get(token.voiceName);
+				env.curStack = env.voiceStackMap.get(token.voiceName);
 				break;
 				
 			case NOTE:
+				env.checkBody();
+				
+				//adds the note to the top of the current stack
+				Fraction duration = token.noteDuration;
+				
+				env.barDuration = env.barDuration.add(duration);
+				
+				sound.Pitch miPi = env.barKeySig.getPitch(token.noteName, token.noteOctave);
+				env.curStack.peek().add(TunePrimitive.Note(duration, miPi));
+				break;				
+				
+			case ACCIDENTAL:
+				env.checkBody();
+				
+				//replaces the barKeySig with the new one
+				env.barKeySig = env.barKeySig.fromAccidental(token.accNote,token.accModifier);
+				break;
+				
+			case REST:
+				env.checkBody();
 				
 				if (!env.inBody) {
 					env.switchToBody();
 				}
 				
-				Fraction duration = token.noteDuration;
-				sound.Pitch miPi = env.barKeySig.getPitch(token.noteName, token.noteOctave);
-				env.curSeq.add(TunePrimitive.Note(duration, miPi));
+				env.barDuration = env.barDuration.add(token.restDuration);
 				
+				env.curStack.peek().add(TunePrimitive.Rest(token.restDuration));
+				break;				
 				
-			case ACCIDENTAL:
-			case REST:
 			case STARTCHORD:
+				env.checkBody();
+				
+				Chord newChord = new Chord();
+				env.curStack.peek().add(newChord);
+				env.curStack.push(newChord);
+				env.inChord = true;
+				break;
+	
 			case ENDCHORD:
+				if (!env.inChord) {
+					throw new ABCParserException("End chord cannot come before new Chord!");
+				}
+				
+				env.curStack.pop();
+				env.inChord = false;
+				break;
+				
 			case STARTTUPLET:
+				env.checkBody();
+				
+				Tuple newTuplet = new Tuple(token.startTupletNoteCount);
+				env.curStack.peek().add(newTuplet);
+				env.curStack.push(newTuplet);
+				env.inTuplet = true;
+				break;
+				
 			case ENDTUPLET:
+				if (!env.inTuplet) {
+					throw new ABCParserException("End tuplet cannot come before new tuplet!");
+				}
+				
+				env.curStack.pop();
+				env.inTuplet = false;
+				break;
+				
 			case STARTSECTION:
+				env.checkBody();
+				
+				//close the old section, open the new section
+				TuneSequence newSection = new TuneSequence();
+				env.curStack.pop(); //close the old one
+				env.curStack.peek().add(newSection);
+				env.curStack.push(newSection);
+				break;
+				
 			case STARTBAR:
+				env.checkBody();
+				
+				env.barDuration = new Fraction(0,1);
+				env.barKeySig = env.globalKeySig;
+				break;
+				
 			case STARTREPEAT:
+				env.checkBody();
+				
+				env.repeatizeTop();
+				
+				
 			case MULTIENDING:
 			case ENDSECTION:
 			case ENDBAR:

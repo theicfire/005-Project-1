@@ -38,8 +38,6 @@ public class ABCToken {
 	 */
 	public int noteOctave;
 	
-	
-	
 	public Fraction noteDuration;
 	
 	public String accNote;
