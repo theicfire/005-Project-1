@@ -71,23 +71,26 @@ public class Lexer {
 					
 					Matcher m = r.matcher(restOfLine);
 					if (m.find()) {
-						System.out.println("group thing" + m.group());
 						if (m.group(1).length() != 1) {
 							throw new RuntimeException("Wrong note format");
 						}
 						char noteName = m.group(1).charAt(0);
-						String modifiers = m.group(2); // like ''' or something
-						if (m.group(3).length() > 1) {
+						String modifiers = "";
+						if (m.group(2) != null) {
+							modifiers = m.group(2); // like ''' or something
+						}
+						if (m.group(3) != null && m.group(3).length() > 1) {
 							throw new RuntimeException("Wrong numerator format");
 						}
 						int numerator = -1;
-						if (m.groupCount() > 4 && m.group(3).length() >= 1) {
+						if (m.group(3) != null && m.group(3).length() >= 1) {
 							numerator = Integer.parseInt(m.group(3));
 						}
 						int denom = -1;
-						if (m.groupCount() > 5 && m.group(5).length() >= 1) {
+						if (m.group(5) != null && m.group(5).length() >= 1) {
 							denom = Integer.parseInt(m.group(5));
 						}
+						System.out.println("end result " + noteName + " " + modifiers + " " + numerator + " " + denom);
 					} else {
 						throw new RuntimeException("bad fraction");
 					}
@@ -99,6 +102,7 @@ public class Lexer {
 
 					addToTokens(curbuilder);
 					
+					System.out.println("full group" + m.group(0));
 					i += m.group(0).length() - 1; // -1 because 1 is being added at the end
 				} else if (c == '|') {
 					
