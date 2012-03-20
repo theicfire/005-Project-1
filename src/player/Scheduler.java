@@ -2,13 +2,18 @@ package player;
 
 import javax.sound.midi.InvalidMidiDataException;
 import javax.sound.midi.MidiUnavailableException;
-
 import sound.SequencePlayer;
+
+
+/*  
+ * Scheduler implements SchedulableVisitor. Recursively walks down schedulable tree
+ * 	and schedules notes to the scheduler's sequenceplayer. 
+ */
 
 public class Scheduler implements SchedulableVisitor{
 	private SequencePlayer PLAYER;
 	private int clock;
-	private final int TICKS_PER_QUARTER;
+	private int TICKS_PER_QUARTER;
 	
 	
 	public void visit(TuneSequence s) {
@@ -28,6 +33,7 @@ public class Scheduler implements SchedulableVisitor{
 	public void visit(TuneRepeatable r) {
 		if (!r.hasMultipleEndings()) {
 			r.body().accept(this);
+			r.body().accept(this);
 		}
 		else {
 			for (Schedulable s : r.endings()) {
@@ -37,16 +43,15 @@ public class Scheduler implements SchedulableVisitor{
 		}
 		
 	}
-	// IMPLAMENT WHEN KNOW HOW DO
+
 	public void visit(Tuple t) {
-		int startClock = clock;
+		int oldTicks = TICKS_PER_QUARTER;
 		Fraction frac = t.multiplier;
+		TICKS_PER_QUARTER = frac.times(oldTicks).toInt();
 		for (Schedulable s : t) {
-			s.accept(this);
-			int diff = clock - startClock;
-			diff = frac.times(diff).toInt();
-			clock += diff;			
+			s.accept(this);			
 		}
+		TICKS_PER_QUARTER = oldTicks;
 	}
 	/* assumes that ticks_per_quarter * p.duration is an int*/
 	public void visit(TunePrimitive p) {
@@ -70,4 +75,8 @@ public class Scheduler implements SchedulableVisitor{
 		this.clock = 0;
 		this.TICKS_PER_QUARTER = ticksPerQuarterNote;
 	}
+	
+//	public Scheduler(ABCEnvironment abc) {
+//		
+//	}
 }
