@@ -21,7 +21,7 @@ public class KeySignature {
 		}
 		
 	}
-	public KeySignature fromAccidental(String name, String modifier, int octave) {
+	public KeySignature fromAccidental(char name, String modifier, int octave) {
 		int pitchChange = 0;
 		if (modifier.equals("#"))
 			pitchChange = 1;
@@ -36,7 +36,7 @@ public class KeySignature {
 			
 		HashMap<String, Pitch> keySig = (HashMap<String, Pitch>) keyPitches.clone();
 		HashMap<String, Pitch> mod = (HashMap<String, Pitch>) modNotes.clone();
-		mod.put(name + octave, new Pitch(name.charAt(0)).accidentalTranspose(pitchChange).octaveTranspose(octave));
+		mod.put(Character.toString(name) + octave, new Pitch(name).accidentalTranspose(pitchChange).octaveTranspose(octave));
 		
 		return new KeySignature(keySig, mod);
 		
