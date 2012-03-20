@@ -83,7 +83,20 @@ public class ABCParseEnvironment {
 	public void repeatizeTop() {
 		//replaces the top elemented of the current stack
 		//with a reapeat that has the prior top element as its first element
-		
+		TuneSequence oldTop = curStack.pop();
+		TuneRepeatable newRepeat = TuneRepeatable.fromSchedulable(oldTop);
+		//remove oldTop from the end of the top
+		curStack.peek().contents.pop();
+		curStack.peek().add(newRepeat);
+		curStack.push(newRepeat);
+		curStack.push(oldTop);
+	}
+	
+	public void newSection() {
+		TuneSequence newSection = new TuneSequence();
+		curStack.pop(); //close the old one
+		curStack.peek().add(newSection);
+		curStack.push(newSection);
 	}
 	
 
