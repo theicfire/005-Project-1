@@ -11,6 +11,8 @@ public class Lexer {
 
 	public ArrayList<ABCToken> tokens = new ArrayList<ABCToken>();
 	public boolean isHeader = true;
+	
+	public String prevTokenString = null;
 
 	public Lexer(String fileName) {
 		System.out.println("constructing Lexer");
@@ -59,8 +61,31 @@ public class Lexer {
 				isHeader = false;
 			}
 		} else {
-			
+			for (int i = 0; i < line.length(); i++) {
+				char c = line.charAt(i);
+				if (Character.isLetter(c)) {
+					addToTokens(prevTokenString);
+				}
+				
+			}
 		}
 
+	}
+	
+
+	/*
+	 * Modifies: prevTokenString
+	 */
+	public void addToTokens(String tokenString) {
+		if (tokenString == null || tokenString.isEmpty()) {
+			return;
+		}
+		if (Character.isLetter(tokenString.charAt(0))) {
+			// adding a tone
+		}
+	}
+	// TODO: remove
+	public static void main(String [] args) {
+		Lexer l = new Lexer("sample_abc/paddy.abc");
 	}
 }
