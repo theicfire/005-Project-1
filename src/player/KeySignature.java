@@ -5,17 +5,17 @@ import java.util.HashMap;
 import sound.Pitch;
 
 public class KeySignature {
-	private HashMap<String, Pitch> keyPitches;
+	private HashMap<Character, Pitch> keyPitches;
 	private HashMap<String, Pitch> modNotes;
 	public final boolean modified;
 	
 	
-	public Pitch getPitch(String note, int octave) {
+	public Pitch getPitch(char note, int octave) {
 		if (!modified)
 			return keyPitches.get(note).octaveTranspose(octave);
 		else {
-			if (modNotes.containsKey(note + octave)) {
-				return modNotes.get(note + octave);
+			if (modNotes.containsKey(Character.toString(note) + octave)) {
+				return modNotes.get(Character.toString(note) + octave);
 			}
 			return keyPitches.get(note).octaveTranspose(octave);
 		}
@@ -34,7 +34,7 @@ public class KeySignature {
 		else if (modifier.equals("="))
 			pitchChange = 0;
 			
-		HashMap<String, Pitch> keySig = (HashMap<String, Pitch>) keyPitches.clone();
+		HashMap<Character, Pitch> keySig = (HashMap<Character, Pitch>) keyPitches.clone();
 		HashMap<String, Pitch> mod = (HashMap<String, Pitch>) modNotes.clone();
 		mod.put(Character.toString(name) + octave, new Pitch(name).accidentalTranspose(pitchChange).octaveTranspose(octave));
 		
@@ -101,168 +101,168 @@ public class KeySignature {
 		
 		switch (noteToNum.get(key)) {
 		case 0 : 
-			keyPitches.put("C", new Pitch('C'));
-			keyPitches.put("D", new Pitch('D'));
-			keyPitches.put("E", new Pitch('E'));
-			keyPitches.put("F", new Pitch('F'));
-			keyPitches.put("G", new Pitch('G'));
-			keyPitches.put("A", new Pitch('A'));
-			keyPitches.put("B", new Pitch('B'));
+			keyPitches.put('C', new Pitch('C'));
+			keyPitches.put('D', new Pitch('D'));
+			keyPitches.put('E', new Pitch('E'));
+			keyPitches.put('F', new Pitch('F'));
+			keyPitches.put('G', new Pitch('G'));
+			keyPitches.put('A', new Pitch('A'));
+			keyPitches.put('B', new Pitch('B'));
 			break;
 		case 1 : 
-			keyPitches.put("C", new Pitch('C'));
-			keyPitches.put("D", new Pitch('D'));
-			keyPitches.put("E", new Pitch('E'));
-			keyPitches.put("F", new Pitch('F'));
-			keyPitches.put("G", new Pitch('G'));
-			keyPitches.put("A", new Pitch('A'));
-			keyPitches.put("B", new Pitch('B').accidentalTranspose(-1));
+			keyPitches.put('C', new Pitch('C'));
+			keyPitches.put('D', new Pitch('D'));
+			keyPitches.put('E', new Pitch('E'));
+			keyPitches.put('F', new Pitch('F'));
+			keyPitches.put('G', new Pitch('G'));
+			keyPitches.put('A', new Pitch('A'));
+			keyPitches.put('B', new Pitch('B').accidentalTranspose(-1));
 			break;
 		case 2 :
-			keyPitches.put("C", new Pitch('C'));
-			keyPitches.put("D", new Pitch('D'));
-			keyPitches.put("E", new Pitch('E').accidentalTranspose(-1));
-			keyPitches.put("F", new Pitch('F'));
-			keyPitches.put("G", new Pitch('G'));
-			keyPitches.put("A", new Pitch('A'));
-			keyPitches.put("B", new Pitch('B').accidentalTranspose(-1));
+			keyPitches.put('C', new Pitch('C'));
+			keyPitches.put('D', new Pitch('D'));
+			keyPitches.put('E', new Pitch('E').accidentalTranspose(-1));
+			keyPitches.put('F', new Pitch('F'));
+			keyPitches.put('G', new Pitch('G'));
+			keyPitches.put('A', new Pitch('A'));
+			keyPitches.put('B', new Pitch('B').accidentalTranspose(-1));
 
 			break;
 		case 3 : 
-			keyPitches.put("C", new Pitch('C'));
-			keyPitches.put("D", new Pitch('D'));
-			keyPitches.put("E", new Pitch('E').accidentalTranspose(-1));
-			keyPitches.put("F", new Pitch('F'));
-			keyPitches.put("G", new Pitch('G'));
-			keyPitches.put("A", new Pitch('A').accidentalTranspose(-1));
-			keyPitches.put("B", new Pitch('B').accidentalTranspose(-1));
+			keyPitches.put('C', new Pitch('C'));
+			keyPitches.put('D', new Pitch('D'));
+			keyPitches.put('E', new Pitch('E').accidentalTranspose(-1));
+			keyPitches.put('F', new Pitch('F'));
+			keyPitches.put('G', new Pitch('G'));
+			keyPitches.put('A', new Pitch('A').accidentalTranspose(-1));
+			keyPitches.put('B', new Pitch('B').accidentalTranspose(-1));
 			
 			break;
 		case 4 : 
-			keyPitches.put("C", new Pitch('C'));
-			keyPitches.put("D", new Pitch('D').accidentalTranspose(-1));
-			keyPitches.put("E", new Pitch('E').accidentalTranspose(-1));
-			keyPitches.put("F", new Pitch('F'));
-			keyPitches.put("G", new Pitch('G'));
-			keyPitches.put("A", new Pitch('A').accidentalTranspose(-1));
-			keyPitches.put("B", new Pitch('B').accidentalTranspose(-1));
+			keyPitches.put('C', new Pitch('C'));
+			keyPitches.put('D', new Pitch('D').accidentalTranspose(-1));
+			keyPitches.put('E', new Pitch('E').accidentalTranspose(-1));
+			keyPitches.put('F', new Pitch('F'));
+			keyPitches.put('G', new Pitch('G'));
+			keyPitches.put('A', new Pitch('A').accidentalTranspose(-1));
+			keyPitches.put('B', new Pitch('B').accidentalTranspose(-1));
 			break;
 		case 5 : 
-			keyPitches.put("C", new Pitch('C'));
-			keyPitches.put("D", new Pitch('D').accidentalTranspose(-1));
-			keyPitches.put("E", new Pitch('E').accidentalTranspose(-1));
-			keyPitches.put("F", new Pitch('F'));
-			keyPitches.put("G", new Pitch('G').accidentalTranspose(-1));
-			keyPitches.put("A", new Pitch('A').accidentalTranspose(-1));
-			keyPitches.put("B", new Pitch('B').accidentalTranspose(-1));
+			keyPitches.put('C', new Pitch('C'));
+			keyPitches.put('D', new Pitch('D').accidentalTranspose(-1));
+			keyPitches.put('E', new Pitch('E').accidentalTranspose(-1));
+			keyPitches.put('F', new Pitch('F'));
+			keyPitches.put('G', new Pitch('G').accidentalTranspose(-1));
+			keyPitches.put('A', new Pitch('A').accidentalTranspose(-1));
+			keyPitches.put('B', new Pitch('B').accidentalTranspose(-1));
 			break;
 		case 6 : 
-			keyPitches.put("C", new Pitch('C').accidentalTranspose(-1));
-			keyPitches.put("D", new Pitch('D').accidentalTranspose(-1));
-			keyPitches.put("E", new Pitch('E').accidentalTranspose(-1));
-			keyPitches.put("F", new Pitch('F'));
-			keyPitches.put("G", new Pitch('G').accidentalTranspose(-1));
-			keyPitches.put("A", new Pitch('A').accidentalTranspose(-1));
-			keyPitches.put("B", new Pitch('B').accidentalTranspose(-1));
+			keyPitches.put('C', new Pitch('C').accidentalTranspose(-1));
+			keyPitches.put('D', new Pitch('D').accidentalTranspose(-1));
+			keyPitches.put('E', new Pitch('E').accidentalTranspose(-1));
+			keyPitches.put('F', new Pitch('F'));
+			keyPitches.put('G', new Pitch('G').accidentalTranspose(-1));
+			keyPitches.put('A', new Pitch('A').accidentalTranspose(-1));
+			keyPitches.put('B', new Pitch('B').accidentalTranspose(-1));
 			break;
 		case 7 : 
-			keyPitches.put("C", new Pitch('C').accidentalTranspose(-1));
-			keyPitches.put("D", new Pitch('D').accidentalTranspose(-1));
-			keyPitches.put("E", new Pitch('E').accidentalTranspose(-1));
-			keyPitches.put("F", new Pitch('F').accidentalTranspose(-1));
-			keyPitches.put("G", new Pitch('G').accidentalTranspose(-1));
-			keyPitches.put("A", new Pitch('A').accidentalTranspose(-1));
-			keyPitches.put("B", new Pitch('B').accidentalTranspose(-1));
+			keyPitches.put('C', new Pitch('C').accidentalTranspose(-1));
+			keyPitches.put('D', new Pitch('D').accidentalTranspose(-1));
+			keyPitches.put('E', new Pitch('E').accidentalTranspose(-1));
+			keyPitches.put('F', new Pitch('F').accidentalTranspose(-1));
+			keyPitches.put('G', new Pitch('G').accidentalTranspose(-1));
+			keyPitches.put('A', new Pitch('A').accidentalTranspose(-1));
+			keyPitches.put('B', new Pitch('B').accidentalTranspose(-1));
 			break;
 		case 8 : 
-			keyPitches.put("C", new Pitch('C').accidentalTranspose(-1));
-			keyPitches.put("D", new Pitch('D').accidentalTranspose(-1));
-			keyPitches.put("E", new Pitch('E').accidentalTranspose(-1));
-			keyPitches.put("F", new Pitch('F').accidentalTranspose(-1));
-			keyPitches.put("G", new Pitch('G').accidentalTranspose(-1));
-			keyPitches.put("A", new Pitch('A').accidentalTranspose(-1));
-			keyPitches.put("B", new Pitch('B').accidentalTranspose(-2));
+			keyPitches.put('C', new Pitch('C').accidentalTranspose(-1));
+			keyPitches.put('D', new Pitch('D').accidentalTranspose(-1));
+			keyPitches.put('E', new Pitch('E').accidentalTranspose(-1));
+			keyPitches.put('F', new Pitch('F').accidentalTranspose(-1));
+			keyPitches.put('G', new Pitch('G').accidentalTranspose(-1));
+			keyPitches.put('A', new Pitch('A').accidentalTranspose(-1));
+			keyPitches.put('B', new Pitch('B').accidentalTranspose(-2));
 			break;
 		case 9 : 
-			keyPitches.put("C", new Pitch('C'));
-			keyPitches.put("D", new Pitch('D'));
-			keyPitches.put("E", new Pitch('E'));
-			keyPitches.put("F", new Pitch('F').accidentalTranspose(1));
-			keyPitches.put("G", new Pitch('G'));
-			keyPitches.put("A", new Pitch('A'));
-			keyPitches.put("B", new Pitch('B'));
+			keyPitches.put('C', new Pitch('C'));
+			keyPitches.put('D', new Pitch('D'));
+			keyPitches.put('E', new Pitch('E'));
+			keyPitches.put('F', new Pitch('F').accidentalTranspose(1));
+			keyPitches.put('G', new Pitch('G'));
+			keyPitches.put('A', new Pitch('A'));
+			keyPitches.put('B', new Pitch('B'));
 			break;
 		case 10 : 
-			keyPitches.put("C", new Pitch('C').accidentalTranspose(1));
-			keyPitches.put("D", new Pitch('D'));
-			keyPitches.put("E", new Pitch('E'));
-			keyPitches.put("F", new Pitch('F').accidentalTranspose(1));
-			keyPitches.put("G", new Pitch('G'));
-			keyPitches.put("A", new Pitch('A'));
-			keyPitches.put("B", new Pitch('B'));
+			keyPitches.put('C', new Pitch('C').accidentalTranspose(1));
+			keyPitches.put('D', new Pitch('D'));
+			keyPitches.put('E', new Pitch('E'));
+			keyPitches.put('F', new Pitch('F').accidentalTranspose(1));
+			keyPitches.put('G', new Pitch('G'));
+			keyPitches.put('A', new Pitch('A'));
+			keyPitches.put('B', new Pitch('B'));
 			break;
 		case 11 : 
-			keyPitches.put("C", new Pitch('C').accidentalTranspose(1));
-			keyPitches.put("D", new Pitch('D'));
-			keyPitches.put("E", new Pitch('E'));
-			keyPitches.put("F", new Pitch('F').accidentalTranspose(1));
-			keyPitches.put("G", new Pitch('G').accidentalTranspose(1));
-			keyPitches.put("A", new Pitch('A'));
-			keyPitches.put("B", new Pitch('B'));
+			keyPitches.put('C', new Pitch('C').accidentalTranspose(1));
+			keyPitches.put('D', new Pitch('D'));
+			keyPitches.put('E', new Pitch('E'));
+			keyPitches.put('F', new Pitch('F').accidentalTranspose(1));
+			keyPitches.put('G', new Pitch('G').accidentalTranspose(1));
+			keyPitches.put('A', new Pitch('A'));
+			keyPitches.put('B', new Pitch('B'));
 			break;
 		case 12 : 
-			keyPitches.put("C", new Pitch('C').accidentalTranspose(1));
-			keyPitches.put("D", new Pitch('D').accidentalTranspose(1));
-			keyPitches.put("E", new Pitch('E'));
-			keyPitches.put("F", new Pitch('F').accidentalTranspose(1));
-			keyPitches.put("G", new Pitch('G').accidentalTranspose(1));
-			keyPitches.put("A", new Pitch('A'));
-			keyPitches.put("B", new Pitch('B'));
+			keyPitches.put('C', new Pitch('C').accidentalTranspose(1));
+			keyPitches.put('D', new Pitch('D').accidentalTranspose(1));
+			keyPitches.put('E', new Pitch('E'));
+			keyPitches.put('F', new Pitch('F').accidentalTranspose(1));
+			keyPitches.put('G', new Pitch('G').accidentalTranspose(1));
+			keyPitches.put('A', new Pitch('A'));
+			keyPitches.put('B', new Pitch('B'));
 			break;
 		case 13 : 
-			keyPitches.put("C", new Pitch('C').accidentalTranspose(1));
-			keyPitches.put("D", new Pitch('D').accidentalTranspose(1));
-			keyPitches.put("E", new Pitch('E'));
-			keyPitches.put("F", new Pitch('F').accidentalTranspose(1));
-			keyPitches.put("G", new Pitch('G').accidentalTranspose(1));
-			keyPitches.put("A", new Pitch('A').accidentalTranspose(1));
-			keyPitches.put("B", new Pitch('B'));
+			keyPitches.put('C', new Pitch('C').accidentalTranspose(1));
+			keyPitches.put('D', new Pitch('D').accidentalTranspose(1));
+			keyPitches.put('E', new Pitch('E'));
+			keyPitches.put('F', new Pitch('F').accidentalTranspose(1));
+			keyPitches.put('G', new Pitch('G').accidentalTranspose(1));
+			keyPitches.put('A', new Pitch('A').accidentalTranspose(1));
+			keyPitches.put('B', new Pitch('B'));
 			break;
 		case 14 : 
-			keyPitches.put("C", new Pitch('C').accidentalTranspose(1));
-			keyPitches.put("D", new Pitch('D').accidentalTranspose(1));
-			keyPitches.put("E", new Pitch('E').accidentalTranspose(1));
-			keyPitches.put("F", new Pitch('F').accidentalTranspose(1));
-			keyPitches.put("G", new Pitch('G').accidentalTranspose(1));
-			keyPitches.put("A", new Pitch('A').accidentalTranspose(1));
-			keyPitches.put("B", new Pitch('B'));
+			keyPitches.put('C', new Pitch('C').accidentalTranspose(1));
+			keyPitches.put('D', new Pitch('D').accidentalTranspose(1));
+			keyPitches.put('E', new Pitch('E').accidentalTranspose(1));
+			keyPitches.put('F', new Pitch('F').accidentalTranspose(1));
+			keyPitches.put('G', new Pitch('G').accidentalTranspose(1));
+			keyPitches.put('A', new Pitch('A').accidentalTranspose(1));
+			keyPitches.put('B', new Pitch('B'));
 			break;
 		case 15 : 
-			keyPitches.put("C", new Pitch('C').accidentalTranspose(1));
-			keyPitches.put("D", new Pitch('D').accidentalTranspose(1));
-			keyPitches.put("E", new Pitch('E').accidentalTranspose(1));
-			keyPitches.put("F", new Pitch('F').accidentalTranspose(1));
-			keyPitches.put("G", new Pitch('G').accidentalTranspose(1));
-			keyPitches.put("A", new Pitch('A').accidentalTranspose(1));
-			keyPitches.put("B", new Pitch('B').accidentalTranspose(1));
+			keyPitches.put('C', new Pitch('C').accidentalTranspose(1));
+			keyPitches.put('D', new Pitch('D').accidentalTranspose(1));
+			keyPitches.put('E', new Pitch('E').accidentalTranspose(1));
+			keyPitches.put('F', new Pitch('F').accidentalTranspose(1));
+			keyPitches.put('G', new Pitch('G').accidentalTranspose(1));
+			keyPitches.put('A', new Pitch('A').accidentalTranspose(1));
+			keyPitches.put('B', new Pitch('B').accidentalTranspose(1));
 			break;
 		case 16 : 
-			keyPitches.put("C", new Pitch('C').accidentalTranspose(1));
-			keyPitches.put("D", new Pitch('D').accidentalTranspose(1));
-			keyPitches.put("E", new Pitch('E').accidentalTranspose(1));
-			keyPitches.put("F", new Pitch('F').accidentalTranspose(2));
-			keyPitches.put("G", new Pitch('G').accidentalTranspose(1));
-			keyPitches.put("A", new Pitch('A').accidentalTranspose(1));
-			keyPitches.put("B", new Pitch('B').accidentalTranspose(1));
+			keyPitches.put('C', new Pitch('C').accidentalTranspose(1));
+			keyPitches.put('D', new Pitch('D').accidentalTranspose(1));
+			keyPitches.put('E', new Pitch('E').accidentalTranspose(1));
+			keyPitches.put('F', new Pitch('F').accidentalTranspose(2));
+			keyPitches.put('G', new Pitch('G').accidentalTranspose(1));
+			keyPitches.put('A', new Pitch('A').accidentalTranspose(1));
+			keyPitches.put('B', new Pitch('B').accidentalTranspose(1));
 			break;
 		case 17 : 
-			keyPitches.put("C", new Pitch('C').accidentalTranspose(2));
-			keyPitches.put("D", new Pitch('D').accidentalTranspose(1));
-			keyPitches.put("E", new Pitch('E').accidentalTranspose(1));
-			keyPitches.put("F", new Pitch('F').accidentalTranspose(2));
-			keyPitches.put("G", new Pitch('G').accidentalTranspose(1));
-			keyPitches.put("A", new Pitch('A').accidentalTranspose(1));
-			keyPitches.put("B", new Pitch('B').accidentalTranspose(1));
+			keyPitches.put('C', new Pitch('C').accidentalTranspose(2));
+			keyPitches.put('D', new Pitch('D').accidentalTranspose(1));
+			keyPitches.put('E', new Pitch('E').accidentalTranspose(1));
+			keyPitches.put('F', new Pitch('F').accidentalTranspose(2));
+			keyPitches.put('G', new Pitch('G').accidentalTranspose(1));
+			keyPitches.put('A', new Pitch('A').accidentalTranspose(1));
+			keyPitches.put('B', new Pitch('B').accidentalTranspose(1));
 			break;
 		}
 		
@@ -271,7 +271,7 @@ public class KeySignature {
 	
 	}
 	
-	private KeySignature(HashMap<String, Pitch> keyMap, HashMap<String, Pitch> modMap) {
+	private KeySignature(HashMap<Character, Pitch> keyMap, HashMap<String, Pitch> modMap) {
 		keyPitches = keyMap;
 		modified = true;
 		modNotes = modMap;
