@@ -4,55 +4,22 @@ package player;
 import java.util.HashMap;
 import java.util.Stack;
 import java.util.ArrayList;
+
+import java.util.regex.Pattern;
+import java.util.regex.Matcher;
+
+
 import lexer.ABCToken;
 import lexer.ABCToken.Lexeme.*;
+
 
 public class ABCParser {
 
 	
 	public static ABCEnvironment parse(ArrayList<ABCToken> tokenList) {
 		
-		ABCEnvironment outenv =  new ABCEnvironment();		
+		ABCParseEnvironment env =  new ABCParseEnvironment();		
 		
-		/*
-		 * Instantiation stuff
-		 *  - hash map pointing voices to sequence
-		 *  - tune parallel with all those sequences
-		 *  - current smallest denominator
-		 *  - meter (sum of durations)
-		 *  - tempo (quarter notes per minute)
-		 *  - inBody
-		 *  - inRepeat
-		 *  - bodySum
-		 *  - globalKeySig
-		 *  - seenXHeader
-		 *  - seenTHeader
-		 *  - seenKHeader
-		 */
-		
-		HashMap<String,TuneSequence> voiceSequenceMap = new HashMap<String,TuneSequence>();
-		TuneParallel rootParallel = new TuneParallel();
-		
-		int ticksPerDefaultNote;
-		
-		//defaults meter: 4/4, tempo: 100DefaultNotesPerMinute, default note length: 1/8
-		Fraction meter = new Fraction(4,4);
-		Fraction defaultLength = new Fraction(1,8);
-		
-		//statestuff
-		boolean inBody = false;
-		boolean inRepeat = false;
-		
-		//keeping track of duration within bar
-		Fraction barDuration = new Fraction(0,1);
-		
-		KeySignature globalKeySig;
-		KeySignature barKeySig;
-		
-		//mandatory header booleans
-		boolean seenXHeader = false;
-		boolean seenTHeader = false;
-		boolean seenKHeader = false;
 		
 		//ok. lets parse!
 		for (ABCToken token : tokenList) {
@@ -62,22 +29,32 @@ public class ABCParser {
 			//header handling is a bitch
 			case HEADER:
 				String key = token.headerKey;
+				env.headers.put(key, token.headerValue);
 				
 				if (key.equals("C")) {
-					
-					//this header has no effect <composer>
-					outenv.setHeader(key, token.headerValue);
+					//this header has no effect <composer>		
 					
 				} else if (key.equals("K")) {
-					
 					//this is the key signature header.
-					globalKeySig = KigSignature(token.headerValue);
-					seenKHeader = true;
+					env.globalKeySig = new KeySignature(token.headerValue);
+					env.seenKHeader = true;
 					
 				} else if (key.equals("L")) {
-					
+					//this is the default duration header
+					//value has the form DIGIT+/DIGIT+
+					Pattern lengthPattern = Pattern.compile("(\\d+)/(\\d+)");
+					Matcher match = lengthPattern.matcher(token.headerValue);
+					if (!match.matches()) {
+						throw new ABCParserException("Length header value invalid");
+					}
+					//set the defaultLengthState
+					env.defaultLength = new Fraction(
+										Integer.parseInt(match.group(1)),
+										Integer.parseInt(match.group(2))
+										);	
 					
 				} else if (key.equals("M")) {
+					
 					
 				} else if (key.equals("Q")) {
 					
@@ -86,7 +63,7 @@ public class ABCParser {
 				} else if (key.equals("X")) {
 					
 				}
-				
+				/*
 				C: Name of the composer.
 				K: Key, which determines the key signature for the piece.
 				L: Default length or duration of a note.
@@ -94,7 +71,41 @@ public class ABCParser {
 				Q: Tempo. It represents the number of default-length notes per minute.
 				T: Title of the piece.
 				X:
+				*/
+				break;
+			
+			case VOICE:
 				
+				if (!env.inBody) {
+					env.voiceSequenceMap.put(token.voiceName, new TuneSequence());
+				}
+				env.curSeq = env.voiceSequenceMap.get(token.voiceName);
+				break;
+				
+			case NOTE:
+				
+				if (!env.inBody) {
+					env.switchToBody();
+				}
+				
+				Fraction duration = token.noteDuration;
+				sound.Pitch miPi = env.barKeySig.getPitch(token.noteName, token.noteOctave);
+				env.curSeq.add(TunePrimitive.Note(duration, miPi));
+				
+				
+			case ACCIDENTAL:
+			case REST:
+			case STARTCHORD:
+			case ENDCHORD:
+			case STARTTUPLET:
+			case ENDTUPLET:
+			case STARTSECTION:
+			case STARTBAR:
+			case STARTREPEAT:
+			case MULTIENDING:
+			case ENDSECTION:
+			case ENDBAR:
+			case ENDREPEAT:
 			}
 			
 			
@@ -102,7 +113,7 @@ public class ABCParser {
 		}
 		
 		
-		return outenv;
+		return new ABCEnvironment();
 		
 	}
 	

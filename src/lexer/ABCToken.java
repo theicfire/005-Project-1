@@ -1,5 +1,7 @@
 package lexer;
 
+import player.Fraction;
+
 public class ABCToken {
 	public static enum Lexeme {
 		HEADER,
@@ -38,12 +40,12 @@ public class ABCToken {
 	
 	
 	
-	public int noteDuration;
+	public Fraction noteDuration;
 	
 	public String accNote;
 	public String accModifier;
 	
-	public int restDuration;
+	public Fraction restDuration;
 	
 	public int startTupletNoteCount;
 	
