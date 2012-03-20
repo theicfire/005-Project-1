@@ -36,8 +36,7 @@ public class KeySignature {
 			
 		HashMap<String, Pitch> keySig = (HashMap<String, Pitch>) keyPitches.clone();
 		HashMap<String, Pitch> mod = (HashMap<String, Pitch>) modNotes.clone();
-		mod.put(name + octave, new Pitch(name.charAt(0)).
-				accidentalTranspose(pitchChange).octaveTranspose(octave));
+		mod.put(name + octave, new Pitch(name.charAt(0)).accidentalTranspose(pitchChange).octaveTranspose(octave));
 		
 		return new KeySignature(keySig, mod);
 		

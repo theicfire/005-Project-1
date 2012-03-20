@@ -39,6 +39,10 @@ public class Fraction {
 		return this.times(new Fraction(i,1));
 	}
 	
+	public Fraction inverse() {
+		return new Fraction(dom,num);
+	}
+	
 	public int toIntLax() {
 		return num/dom;
 	}
