@@ -35,6 +35,7 @@ public class Lexer {
 
 	// given a line from the file, parse it
 	public void readLine(String line) {
+		// TODO: make sure x is first
 		if (isHeader) {
 			// use a regex to read the key, value seperated by the :
 			String pattern = "^(.):(.*)";
@@ -46,10 +47,12 @@ public class Lexer {
 			// Now create matcher object.
 			Matcher m = r.matcher(line);
 			if (m.find()) {
+				String key = m.group(1);
+				String value = m.group(2);
 				ABCToken t = ABCTokenBuilder.createBuilder()
 						.setLexeme(ABCToken.Lexeme.HEADER)
-						.setHeaderKey(m.group(1))
-						.setHeaderValue(m.group(2))
+						.setHeaderKey(key)
+						.setHeaderValue(value)
 						.build();
 				tokens.add(t);
 			} else {
