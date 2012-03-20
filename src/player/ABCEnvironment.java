@@ -9,6 +9,7 @@ public class ABCEnvironment {
 	
 	int defaultNotesPerQuarter;
 	int ticksPerDefaultNote;
+	int tempo;
 	
 	public void setHeader(String k,String v) {
 		headers.put(k, v);
