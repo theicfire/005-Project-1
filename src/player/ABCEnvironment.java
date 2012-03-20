@@ -7,7 +7,7 @@ public class ABCEnvironment {
 	HashMap<String,String> headers = new HashMap<String,String>();
 	Schedulable ABCTree = null;
 	
-	int defaultNotesPerQuarter;
+	//ticksPerDefaultNote * tempo = defaultNotes per minute
 	int ticksPerDefaultNote;
 	int tempo;
 	
@@ -15,8 +15,8 @@ public class ABCEnvironment {
 		headers.put(k, v);
 	}
 	
-	public void setDefaultNotesPerQuarter(int n) {
-		defaultNotesPerQuarter = n;
+	public void setTempo(int n) {
+		tempo = n;
 	}
 	
 	public void setTicksPerDefaultNote(int t) {
