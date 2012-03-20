@@ -1,6 +1,7 @@
 package player;
 
 import java.util.HashMap;
+import java.util.Stack;
 
 public class ABCParseEnvironment {
 	
@@ -24,9 +25,9 @@ public class ABCParseEnvironment {
 	
 	HashMap<String,String> headers = new HashMap<String,String>();
 	
-	HashMap<String,TuneSequence> voiceSequenceMap = new HashMap<String,TuneSequence>();
+	HashMap<String,Stack<TuneSequence>> voiceStackMap = new HashMap<String,Stack<TuneSequence>>();
 	TuneParallel rootParallel = new TuneParallel();
-	TuneSequence curSeq = null;
+	Stack<TuneSequence> curStack = null;
 	
 	int ticksPerDefaultNote;
 	
@@ -38,6 +39,8 @@ public class ABCParseEnvironment {
 	//statestuff
 	boolean inBody = false;
 	boolean inRepeat = false;
+	boolean inChord = false;
+	boolean inTuplet = false;
 	
 	//keeping track of duration within bar
 	Fraction barDuration = new Fraction(0,1);
@@ -69,6 +72,12 @@ public class ABCParseEnvironment {
 		//mimic a new bar for the key signature scope
 		barKeySig = globalKeySig;
 		
+	}
+	
+	public void checkBody() {
+		if (!inBody) {
+			switchToBody();
+		}
 	}
 	
 
