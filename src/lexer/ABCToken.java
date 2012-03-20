@@ -26,7 +26,7 @@ public class ABCToken {
 	public String voiceName;
 	
 	// [A-G]
-	public String noteName;
+	public char noteName;
 	
 	/*noteOctave is a number that tells how many octaves from middle C we are
 	 * C --> 0
@@ -40,7 +40,9 @@ public class ABCToken {
 	
 	public int noteDuration;
 	
-	public String accNote;
+	public char accNote;
+	
+	// =, ^, _
 	public String accModifier;
 	
 	public int restDuration;

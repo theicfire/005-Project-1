@@ -12,10 +12,9 @@ public class Lexer {
 	public ArrayList<ABCToken> tokens = new ArrayList<ABCToken>();
 	public boolean isHeader = true;
 	
-	public String prevTokenString = null;
+	public ABCTokenBuilder curbuilder = null;
 
 	public Lexer(String fileName) {
-		System.out.println("constructing Lexer");
 
 		// read file line by line
 		try {
@@ -45,7 +44,6 @@ public class Lexer {
 			// Create a Pattern object
 			Pattern r = Pattern.compile(pattern);
 
-			System.out.println("looking over: " + line);
 			// Now create matcher object.
 			Matcher m = r.matcher(line);
 			if (m.find()) {
@@ -64,7 +62,20 @@ public class Lexer {
 			for (int i = 0; i < line.length(); i++) {
 				char c = line.charAt(i);
 				if (Character.isLetter(c)) {
-					addToTokens(prevTokenString);
+					addToTokens(curbuilder);
+					int octave = Character.isLowerCase(c) ? 1 : 0;
+					curbuilder = ABCTokenBuilder.createBuilder()
+							.setLexeme(ABCToken.Lexeme.NOTE)
+							.setNoteName(Character.toUpperCase(c))
+							.setNoteOctave(octave);
+				} else if (c == '\'') {
+					curbuilder = curbuilder.increaseOctave();
+				} else if (c == ',') {
+					curbuilder = curbuilder.decreaseOctave();
+				} else if (Character.isDigit(c)) {
+					curbuilder.setNoteDuration
+				} else if (c == '|') {
+					
 				}
 				
 			}
@@ -76,13 +87,11 @@ public class Lexer {
 	/*
 	 * Modifies: prevTokenString
 	 */
-	public void addToTokens(String tokenString) {
-		if (tokenString == null || tokenString.isEmpty()) {
+	public void addToTokens(ABCTokenBuilder tokenBuilder) {
+		if (tokenBuilder == null) {
 			return;
 		}
-		if (Character.isLetter(tokenString.charAt(0))) {
-			// adding a tone
-		}
+		tokens.add(tokenBuilder.build()); // this does the check to see if everything is ok
 	}
 	// TODO: remove
 	public static void main(String [] args) {
