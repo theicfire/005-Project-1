@@ -1,5 +1,7 @@
 package player;
 
+import lexer.Lexer;
+
 /**
  * Main entry point of your application.
  */
@@ -16,5 +18,10 @@ public class Main {
 	 */
 	public static void play(String file) {
 		// YOUR CODE HERE
+		Lexer l = new Lexer(file);
+	}
+	
+	public static void main(String [] args) {
+		play("sample_abc/paddy.abc");
 	}
 }
