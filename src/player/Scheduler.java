@@ -26,6 +26,15 @@ public class Scheduler implements SchedulableVisitor{
 	}
 	// IMPLAMENT WHEN KNOW HOW DO
 	public void visit(TuneRepeatable r) {
+		if (!r.hasMultipleEndings()) {
+			r.body().accept(this);
+		}
+		else {
+			for (Schedulable s : r.endings()) {
+				r.body().accept(this);
+				s.accept(this);				
+			}
+		}
 		
 	}
 	// IMPLAMENT WHEN KNOW HOW DO
@@ -39,7 +48,7 @@ public class Scheduler implements SchedulableVisitor{
 			clock += diff;			
 		}
 	}
-	
+	/* assumes that ticks_per_quarter * p.duration is an int*/
 	public void visit(TunePrimitive p) {
 		int start = clock;
 		int change = p.duration.times(TICKS_PER_QUARTER).toInt();
