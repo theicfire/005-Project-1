@@ -5,12 +5,12 @@ import sound.Pitch;
 public class KeySignature {
 	
 	
-	public Pitch getPitch(String note, int octave) {
+	public Pitch getPitch(char note, int octave) {
 		
 		return new Pitch('C');
 		
 	}
-	public KeySignature fromAccidental(String name, String modifier) {
+	public KeySignature fromAccidental(char name, String modifier) {
 		return new KeySignature("d");
 	}
 	

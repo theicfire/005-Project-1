@@ -71,6 +71,7 @@ public class Lexer {
 					
 					Matcher m = r.matcher(restOfLine);
 					if (m.find()) {
+						System.out.println("group thing" + m.group());
 						if (m.group(1).length() != 1) {
 							throw new RuntimeException("Wrong note format");
 						}
@@ -80,11 +81,11 @@ public class Lexer {
 							throw new RuntimeException("Wrong numerator format");
 						}
 						int numerator = -1;
-						if (m.group(3).length() >= 1) {
+						if (m.groupCount() > 4 && m.group(3).length() >= 1) {
 							numerator = Integer.parseInt(m.group(3));
 						}
 						int denom = -1;
-						if (m.groupCount() > 4 && m.group(5).length() >= 1) {
+						if (m.groupCount() > 5 && m.group(5).length() >= 1) {
 							denom = Integer.parseInt(m.group(5));
 						}
 					} else {
