@@ -42,8 +42,9 @@ public class ABCToken {
 	
 	public char accNote;
 	
-	// =, ^, _
-	public String accModifier;
+	// in the range of -2 to 2
+	// [__->-2....^^->2
+	public int accModifier; 
 	
 	public Fraction restDuration;
 	

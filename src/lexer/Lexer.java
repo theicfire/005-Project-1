@@ -70,27 +70,35 @@ public class Lexer {
 					System.out.println("found letter, looking over " + restOfLine);
 					
 					Matcher m = r.matcher(restOfLine);
+					String modifiers = "";
+					int numerator = -1;
+					int denom = -1;
+					char noteName;
 					if (m.find()) {
 						if (m.group(1).length() != 1) {
 							throw new RuntimeException("Wrong note format");
 						}
-						char noteName = m.group(1).charAt(0);
-						String modifiers = m.group(2); // like ''' or something
-						if (m.group(3).length() > 1) {
+						noteName = m.group(1).charAt(0);
+						if (m.group(2) != null) {
+							modifiers = m.group(2); // like ''' or something
+						}
+						if (m.group(3) != null && m.group(3).length() > 1) {
 							throw new RuntimeException("Wrong numerator format");
 						}
-						int numerator = -1;
-						if (m.group(3).length() >= 1) {
+						if (m.group(3) != null && m.group(3).length() >= 1) {
 							numerator = Integer.parseInt(m.group(3));
 						}
-						int denom = -1;
-						if (m.groupCount() > 4 && m.group(5).length() >= 1) {
+						if (m.group(5) != null && m.group(5).length() >= 1) {
 							denom = Integer.parseInt(m.group(5));
 						}
+						System.out.println("end result " + noteName + " " + modifiers + " " + numerator + " " + denom);
 					} else {
 						throw new RuntimeException("bad fraction");
 					}
 					int octave = Character.isLowerCase(c) ? 1 : 0;
+					for (int j = 0; j < modifiers.length(); j++) {
+						octave += modifiers.charAt(j) == ',' ? -1 : 1;
+					}
 					curbuilder = ABCTokenBuilder.createBuilder()
 							.setLexeme(ABCToken.Lexeme.NOTE)
 							.setNoteName(Character.toUpperCase(c))
@@ -98,6 +106,7 @@ public class Lexer {
 
 					addToTokens(curbuilder);
 					
+					System.out.println("full group" + m.group(0));
 					i += m.group(0).length() - 1; // -1 because 1 is being added at the end
 				} else if (c == '|') {
 					

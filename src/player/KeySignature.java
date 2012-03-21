@@ -41,7 +41,6 @@ public class KeySignature {
 		
 		return new KeySignature(keySig, mod);
 		
-		
 	}
 	
 	public KeySignature(String key) {
