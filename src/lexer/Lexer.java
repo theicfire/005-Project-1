@@ -15,6 +15,7 @@ public class Lexer {
 	public boolean isHeader = true;
 	
 	public ABCTokenBuilder curbuilder = null;
+	public int tupletCount = -1;
 
 	public Lexer(String fileName) {
 
@@ -64,7 +65,11 @@ public class Lexer {
 			for (int i = 0; i < line.length(); i++) {
 				char c = line.charAt(i);
 				
-				if (Character.isLetter(c)) {
+				// See if we should put an ENDTUPLET in and if states are correct
+				updateTuplet(c);
+				
+				if (startsNote(c)) {
+					// TODO: worry about accidentals
 					// This is a note. Look at the entire note and process it.
 					String pattern = "^([a-zA-z])([,']*)(\\d)?(/(\\d)?)?";
 					Pattern r = Pattern.compile(pattern);
@@ -119,11 +124,18 @@ public class Lexer {
 					
 //					System.out.println("full group" + m.group(0));
 					i += m.group(0).length() - 1; // -1 because 1 is being added at the end
-				} else if (c == '|') {
-					
 				} else if (c == '[') {
 					// process chord
-					
+					ABCToken token = ABCTokenBuilder.createBuilder()
+							.setLexeme(ABCToken.Lexeme.STARTCHORD)
+							.build();
+					tokens.add(token);
+				} else if (c == ']') {
+					// process chord
+					ABCToken token = ABCTokenBuilder.createBuilder()
+							.setLexeme(ABCToken.Lexeme.ENDCHORD)
+							.build();
+					tokens.add(token);
 				} else if (c == '(') {
 					// process tuplet
 					try {
@@ -131,12 +143,44 @@ public class Lexer {
 						int numChars = Integer.parseInt(""+c);
 						String tuple = line.substring(i + 2, i + 2 + numChars);
 						System.out.println("tuple is " + tuple);
-						i += 2 + numChars;
+						tupletCount = numChars;
+						
+						ABCToken token = ABCTokenBuilder.createBuilder()
+								.setLexeme(ABCToken.Lexeme.STARTTUPLET)
+								.build();
+						tokens.add(token);
+						
+						i += 1;
 					} catch (Exception e) {
 						throw new RuntimeException("Could not process tuplet");
 					}
-					
-					
+				} else if (c == ':') {
+					// end repeat
+					try {
+						if (line.charAt(i+1) == '|') {
+							ABCToken token = ABCTokenBuilder.createBuilder()
+									.setLexeme(ABCToken.Lexeme.ENDREPEAT)
+									.build();
+							tokens.add(token);
+							i += 1;
+						}
+					} catch (Exception e) {
+						throw new RuntimeException("Could not process tuplet");
+					}
+				} else if (c == '|') {
+					// endbar or start repeat
+					if (line.length() > i + 1 && line.charAt(i+1) == ':') {
+						ABCToken token = ABCTokenBuilder.createBuilder()
+								.setLexeme(ABCToken.Lexeme.STARTREPEAT)
+								.build();
+						tokens.add(token);
+						i += 1;
+					} else {
+						ABCToken token = ABCTokenBuilder.createBuilder()
+								.setLexeme(ABCToken.Lexeme.ENDBAR)
+								.build();
+						tokens.add(token);
+					}
 				}
 			}
 		}
@@ -153,8 +197,25 @@ public class Lexer {
 		}
 		tokens.add(tokenBuilder.build()); // this does the check to see if everything is ok
 	}
+	
+	public void updateTuplet(char c) {
+		if (tupletCount > 0 && !startsNote(c)) {
+				throw new RuntimeException("Tokens other than notes are in tuplet");
+		} else if (tupletCount == 0) {
+			ABCToken token = ABCTokenBuilder.createBuilder()
+					.setLexeme(ABCToken.Lexeme.ENDTUPLET)
+					.build();
+			tokens.add(token);
+		}
+		tupletCount -= 1;
+	}
 	// TODO: remove
 	public static void main(String [] args) {
 		Lexer l = new Lexer("sample_abc/paddy.abc");
+	}
+	
+	
+	public static boolean startsNote(char c) {
+		return Character.isLetter(c) || c == '_' || c == '=' || c == '^';
 	}
 }

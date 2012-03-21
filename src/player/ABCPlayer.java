@@ -5,8 +5,6 @@ import javax.sound.midi.MidiUnavailableException;
 import lexer.Lexer;
 
 public class ABCPlayer {
-	
-	
 	public void play(String filename) {
 		Lexer l = new Lexer(filename);
 		ABCEnvironment env = ABCParser.parse(l.tokens);
@@ -19,5 +17,4 @@ public class ABCPlayer {
             e.printStackTrace();
 		}
 	}
-
 }
