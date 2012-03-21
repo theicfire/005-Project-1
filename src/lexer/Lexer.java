@@ -60,8 +60,13 @@ public class Lexer {
 				tokens.add(t);
 			} else {
 				isHeader = false;
+				ABCToken token = ABCTokenBuilder.createBuilder()
+						.setLexeme(ABCToken.Lexeme.STARTSECTION)
+						.build();
+				tokens.add(token);
 			}
-		} else {
+		} 
+		if (!isHeader) {
 			for (int i = 0; i < line.length(); i++) {
 				char c = line.charAt(i);
 				
@@ -69,54 +74,74 @@ public class Lexer {
 				updateTuplet(c);
 				
 				if (startsNote(c)) {
-					// TODO: worry about accidentals
 					// This is a note. Look at the entire note and process it.
-					String pattern = "^([a-zA-z])([,']*)(\\d)?(/(\\d)?)?";
+					String pattern = "^([\\^=_]{0,2})([a-zA-z])([,']*)(\\d)?(/(\\d)?)?";
 					Pattern r = Pattern.compile(pattern);
 					String restOfLine = line.substring(i);
 //					System.out.println("found letter, looking over " + restOfLine);
 					
 					Matcher m = r.matcher(restOfLine);
 					String modifiers = "";
+					String accModifiers = "";
+					int accModifierNum = 0;
 					int numerator = -1;
 					int denom = -1;
 					char noteName;
 					if (m.find()) {
-						if (m.group(1).length() != 1) {
+						if (m.group(1) != null) {
+							accModifiers = m.group(1); // like ^^ or something
+						}
+						if (m.group(2).length() != 1) {
 							throw new RuntimeException("Wrong note format");
 						}
-						noteName = m.group(1).charAt(0);
-						if (m.group(2) != null) {
-							modifiers = m.group(2); // like ''' or something
+						noteName = m.group(2).charAt(0);
+						if (m.group(3) != null) {
+							modifiers = m.group(3); // like ''' or something
 						}
-						if (m.group(3) != null && m.group(3).length() > 1) {
+						if (m.group(4) != null && m.group(4).length() > 1) {
 							throw new RuntimeException("Wrong numerator format");
 						}
-						if (m.group(3) != null && m.group(3).length() >= 1) {
-							numerator = Integer.parseInt(m.group(3));
+						if (m.group(4) != null && m.group(4).length() >= 1) {
+							numerator = Integer.parseInt(m.group(4));
 						}
-						if (m.group(5) != null && m.group(5).length() >= 1) {
-							denom = Integer.parseInt(m.group(5));
+						if (m.group(6) != null && m.group(6).length() >= 1) {
+							denom = Integer.parseInt(m.group(6));
 						}
 //						System.out.println("end result " + noteName + " " + modifiers + " " + numerator + " " + denom);
 					} else {
-						throw new RuntimeException("bad fraction");
+						throw new RuntimeException("bad note");
 					}
+					
+					// octave stuff; looking for things like ''' or ,,
 					int octave = Character.isLowerCase(c) ? 1 : 0;
 					for (int j = 0; j < modifiers.length(); j++) {
 						octave += modifiers.charAt(j) == ',' ? -1 : 1;
 					}
-					Fraction frac;
-					if (numerator == -1 && denom == -1) {
-						frac = new Fraction(1, 1);
-					} else {
-						numerator = numerator == -1 ? 1 : numerator;
-						denom = denom == -1 ? 2 : denom;
-						frac = new Fraction(numerator, denom);
+					
+					
+					Fraction frac = makeFraction(numerator, denom);
+					
+					// accidental stuff
+					if (!accModifiers.isEmpty()) {
+						for (int j = 0; j < accModifiers.length(); j++) {
+							if (accModifiers.charAt(j) == '_') {
+								accModifierNum -= 1;
+							} else if (accModifiers.charAt(j) == '^') {
+								accModifierNum += 1;
+							}
+						}
+						
+						ABCToken token = ABCTokenBuilder.createBuilder()
+								.setLexeme(ABCToken.Lexeme.ACCIDENTAL)
+								.setNoteName(noteName)
+								.setNoteOctave(octave)
+								.setAccModifier(accModifierNum)
+								.build();
+						tokens.add(token);
 					}
 					curbuilder = ABCTokenBuilder.createBuilder()
 							.setLexeme(ABCToken.Lexeme.NOTE)
-							.setNoteName(Character.toUpperCase(c))
+							.setNoteName(noteName)
 							.setNoteOctave(octave)
 							.setNoteDuration(frac);
 
@@ -124,12 +149,46 @@ public class Lexer {
 					
 //					System.out.println("full group" + m.group(0));
 					i += m.group(0).length() - 1; // -1 because 1 is being added at the end
+				} else if (c == 'z') {
+					
+					String pattern = "^z(\\d)?(/(\\d)?)?";
+					Pattern r = Pattern.compile(pattern);
+					String restOfLine = line.substring(i);
+					
+					Matcher m = r.matcher(restOfLine);
+					int numerator = -1;
+					int denom = -1;
+					if (m.find()) {
+						if (m.group(1) != null && m.group(1).length() >= 1) {
+							numerator = Integer.parseInt(m.group(1));
+						}
+						if (m.group(2) != null && m.group(2).length() >= 1) {
+							denom = Integer.parseInt(m.group(2));
+						}
+					} else {
+						throw new RuntimeException("bad rest");
+					}
+					Fraction frac = makeFraction(numerator, denom);
+
+					curbuilder = ABCTokenBuilder.createBuilder()
+							.setLexeme(ABCToken.Lexeme.REST)
+							.setNoteDuration(frac);
+					addToTokens(curbuilder);
+					
 				} else if (c == '[') {
-					// process chord
-					ABCToken token = ABCTokenBuilder.createBuilder()
-							.setLexeme(ABCToken.Lexeme.STARTCHORD)
-							.build();
-					tokens.add(token);
+					// chord or multirepeat
+					if (line.length() > i + 1 && Character.isDigit(line.charAt(i+1))) {
+						ABCToken token = ABCTokenBuilder.createBuilder()
+								.setLexeme(ABCToken.Lexeme.MULTIENDING)
+								.build();
+						tokens.add(token);
+						i += 1;
+					} else {
+						ABCToken token = ABCTokenBuilder.createBuilder()
+								.setLexeme(ABCToken.Lexeme.STARTCHORD)
+								.build();
+						tokens.add(token);
+					}
 				} else if (c == ']') {
 					// process chord
 					ABCToken token = ABCTokenBuilder.createBuilder()
@@ -168,10 +227,20 @@ public class Lexer {
 						throw new RuntimeException("Could not process tuplet");
 					}
 				} else if (c == '|') {
-					// endbar or start repeat
+					// endbar, start repeat, or end section
 					if (line.length() > i + 1 && line.charAt(i+1) == ':') {
 						ABCToken token = ABCTokenBuilder.createBuilder()
 								.setLexeme(ABCToken.Lexeme.STARTREPEAT)
+								.build();
+						tokens.add(token);
+						i += 1;
+					} else if (line.length() > i + 1 && (line.charAt(i+1) == '|' || line.charAt(i+1) == ']')){
+						ABCToken token = ABCTokenBuilder.createBuilder()
+								.setLexeme(ABCToken.Lexeme.ENDSECTION)
+								.build();
+						tokens.add(token);
+						token = ABCTokenBuilder.createBuilder()
+								.setLexeme(ABCToken.Lexeme.STARTSECTION)
 								.build();
 						tokens.add(token);
 						i += 1;
@@ -217,5 +286,21 @@ public class Lexer {
 	
 	public static boolean startsNote(char c) {
 		return Character.isLetter(c) || c == '_' || c == '=' || c == '^';
+	}
+	
+	/*
+	 * Given numerators and denominators, compute a fraction
+	 * Either may be -1, which means it doesn't exist and we have to make defaults
+	 */
+	public static Fraction makeFraction(int num, int denom) {
+		Fraction frac;
+		if (num == -1 && denom == -1) {
+			frac = new Fraction(1, 1);
+		} else {
+			num = num == -1 ? 1 : num;
+			denom = denom == -1 ? 2 : denom;
+			frac = new Fraction(num, denom);
+		}
+		return frac;
 	}
 }

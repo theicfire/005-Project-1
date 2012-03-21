@@ -63,6 +63,12 @@ public class ABCTokenBuilder {
 		return this;
 	}
 	
+	public ABCTokenBuilder setAccModifier(int num) {
+		check();
+		obj.accModifier = num;
+		return this;
+	}
+	
 	private void check() {
         if (done) {
         	throw new IllegalArgumentException("Do use other builder to create new instance");

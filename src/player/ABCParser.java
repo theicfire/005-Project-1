@@ -110,7 +110,7 @@ public class ABCParser {
 				env.checkBody();
 				
 				//replaces the barKeySig with the new one
-				env.barKeySig = env.barKeySig.fromAccidental(token.accNote,token.accModifier,0);
+				env.barKeySig = env.barKeySig.fromAccidental(token.noteName,token.accModifier,0);
 				break;
 				
 			case REST:
