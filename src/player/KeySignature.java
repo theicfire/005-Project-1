@@ -21,22 +21,11 @@ public class KeySignature {
 		}
 		
 	}
-	public KeySignature fromAccidental(char name, String modifier, int octave) {
-		int pitchChange = 0;
-		if (modifier.equals("#"))
-			pitchChange = 1;
-		else if (modifier.equals("##"))
-			pitchChange = 2;
-		else if (modifier.equals("b"))
-			pitchChange = -1;
-		else if (modifier.equals("bb"))
-			pitchChange = -2;
-		else if (modifier.equals("="))
-			pitchChange = 0;
-			
+	// Change modifier to int
+	public KeySignature fromAccidental(char name, int modifier, int octave) {		
 		HashMap<Character, Pitch> keySig = (HashMap<Character, Pitch>) keyPitches.clone();
 		HashMap<String, Pitch> mod = (HashMap<String, Pitch>) modNotes.clone();
-		mod.put(Character.toString(name) + octave, new Pitch(name).accidentalTranspose(pitchChange).octaveTranspose(octave));
+		mod.put(Character.toString(name) + octave, new Pitch(name).accidentalTranspose(modifier).octaveTranspose(octave));
 		
 		return new KeySignature(keySig, mod);
 		
@@ -69,7 +58,7 @@ public class KeySignature {
 		noteToNum.put("Abm", 7);
 		
 		noteToNum.put("Fb", 8);
-		noteToNum.put("Db", 0);
+		noteToNum.put("Dbm", 8);
 		
 		noteToNum.put("G", 9);
 		noteToNum.put("Em", 9);
@@ -84,7 +73,7 @@ public class KeySignature {
 		noteToNum.put("C#m", 12);
 		
 		noteToNum.put("B", 13);
-		noteToNum.put("G#m", 0);
+		noteToNum.put("G#m", 13);
 		
 		noteToNum.put("F#", 14);
 		noteToNum.put("D#m", 14);
@@ -97,6 +86,9 @@ public class KeySignature {
 		
 		noteToNum.put("D#", 17);
 		noteToNum.put("B#m", 17);
+		
+		keyPitches = new HashMap<Character, Pitch>();
+		modNotes = new HashMap<String, Pitch>();
 		
 		switch (noteToNum.get(key)) {
 		case 0 : 
@@ -266,7 +258,6 @@ public class KeySignature {
 		}
 		
 		modified = false;
-		modNotes = null;
 	
 	}
 	

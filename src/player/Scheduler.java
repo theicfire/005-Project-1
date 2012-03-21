@@ -11,7 +11,7 @@ import sound.SequencePlayer;
  */
 
 public class Scheduler implements SchedulableVisitor{
-	private SequencePlayer PLAYER;
+	public SequencePlayer PLAYER;
 	private int clock;
 	private int TICKS_PER_QUARTER;
 	
