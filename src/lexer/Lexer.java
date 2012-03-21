@@ -92,6 +92,12 @@ public class Lexer {
 						.setLexeme(ABCToken.Lexeme.STARTSECTION)
 						.build();
 				tokens.add(token);
+				
+				
+				// TAKE OUT
+				token = ABCTokenBuilder.createBuilder()
+						.build();
+				tokens.add(token);
 			}
 		} 
 		if (!isHeader) {
@@ -208,6 +214,7 @@ public class Lexer {
 					if (line.length() > i + 1 && Character.isDigit(line.charAt(i+1))) {
 						ABCToken token = ABCTokenBuilder.createBuilder()
 								.setLexeme(ABCToken.Lexeme.MULTIENDING)
+								.setMultiEndingNumber(Integer.parseInt(""+line.charAt(i+1)))
 								.build();
 						tokens.add(token);
 						i += 1;
@@ -234,6 +241,7 @@ public class Lexer {
 						
 						ABCToken token = ABCTokenBuilder.createBuilder()
 								.setLexeme(ABCToken.Lexeme.STARTTUPLET)
+								.setStartTupletNoteCount(tupletCount)
 								.build();
 						tokens.add(token);
 						

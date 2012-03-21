@@ -115,9 +115,9 @@ public class ABCParser {
 					env.switchToBody();
 				}
 				
-				env.barDuration = env.barDuration.add(token.restDuration);
+				env.barDuration = env.barDuration.add(token.noteDuration);
 				
-				env.curStack.peek().add(TunePrimitive.Rest(token.restDuration));
+				env.curStack.peek().add(TunePrimitive.Rest(token.noteDuration));
 				break;				
 				
 			case STARTCHORD:

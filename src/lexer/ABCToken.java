@@ -22,7 +22,7 @@ public class ABCToken {
 		ENDREPEAT
 	}
 	public Lexeme lexeme;
-	public char headerKey;
+	public char headerKey = '$';
 	public String headerValue;
 	
 	public String voiceName;
@@ -44,13 +44,15 @@ public class ABCToken {
 	// [__->-2....^^->2
 	public int accModifier; 
 	
-	public Fraction restDuration;
-	
 	public int startTupletNoteCount;
 	
 	public int multiEndingNumber;
 	public ABCToken() {
 		// builder takes care of everything
+	}
+	
+	public void checkRep() {
+		assert true : "Lexeme is null";
 	}
 	
 	@Override
@@ -59,8 +61,7 @@ public class ABCToken {
 				+ ", headerValue=" + headerValue + ", voiceName=" + voiceName
 				+ ", noteName=" + noteName + ", noteOctave=" + noteOctave
 				+ ", noteDuration=" + noteDuration
-				+ ", accModifier=" + accModifier + ", restDuration="
-				+ restDuration + ", startTupletNoteCount="
+				+ ", accModifier=" + accModifier + ", startTupletNoteCount="
 				+ startTupletNoteCount + ", multiEndingNumber="
 				+ multiEndingNumber + "]\n";
 	}

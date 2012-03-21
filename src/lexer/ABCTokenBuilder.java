@@ -12,6 +12,7 @@ public class ABCTokenBuilder {
 	
 	public ABCToken build() {
 		done = true;
+//		obj.checkRep();
 		return obj;
 	}
 	
@@ -72,6 +73,18 @@ public class ABCTokenBuilder {
 	public ABCTokenBuilder setVoiceName(String v) {
 		check();
 		obj.voiceName = v;
+		return this;
+	}
+	
+	public ABCTokenBuilder setStartTupletNoteCount(int n) {
+		check();
+		obj.startTupletNoteCount = n;
+		return this;
+	}
+	
+	public ABCTokenBuilder setMultiEndingNumber(int n) {
+		check();
+		obj.multiEndingNumber = n;
 		return this;
 	}
 	
