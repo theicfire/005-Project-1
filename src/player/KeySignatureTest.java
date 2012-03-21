@@ -38,7 +38,7 @@ public class KeySignatureTest {
 	@Test
 	public void keySigTest3() {
 		KeySignature Dflat = new KeySignature("Dbm");
-		KeySignature DflatMod = Dflat.fromAccidental('D', "=", 0);
+		KeySignature DflatMod = Dflat.fromAccidental('D', 0, 0);
 		Pitch dNatural = new Pitch('D');
 		Pitch highDflat = new Pitch('D').accidentalTranspose(-1).octaveTranspose(1);
 		assert (DflatMod.modified);

@@ -22,22 +22,10 @@ public class KeySignature {
 		
 	}
 	// Change modifier to int
-	public KeySignature fromAccidental(char name, String modifier, int octave) {
-		int pitchChange = 0;
-		if (modifier.equals("#"))
-			pitchChange = 1;
-		else if (modifier.equals("##"))
-			pitchChange = 2;
-		else if (modifier.equals("b"))
-			pitchChange = -1;
-		else if (modifier.equals("bb"))
-			pitchChange = -2;
-		else if (modifier.equals("="))
-			pitchChange = 0;
-			
+	public KeySignature fromAccidental(char name, int modifier, int octave) {		
 		HashMap<Character, Pitch> keySig = (HashMap<Character, Pitch>) keyPitches.clone();
 		HashMap<String, Pitch> mod = (HashMap<String, Pitch>) modNotes.clone();
-		mod.put(Character.toString(name) + octave, new Pitch(name).accidentalTranspose(pitchChange).octaveTranspose(octave));
+		mod.put(Character.toString(name) + octave, new Pitch(name).accidentalTranspose(modifier).octaveTranspose(octave));
 		
 		return new KeySignature(keySig, mod);
 		
