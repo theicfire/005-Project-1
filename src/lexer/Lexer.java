@@ -40,6 +40,20 @@ public class Lexer {
 	// given a line from the file, parse it
 	public void readLine(String line) {
 		// TODO: make sure x is first
+		if (!line.isEmpty() && line.charAt(0) == 'V') {
+			// voice header
+			try {
+				String voiceName = line.substring(2);
+				ABCToken token = ABCTokenBuilder.createBuilder()
+						.setLexeme(ABCToken.Lexeme.VOICE)
+						.setVoiceName(voiceName)
+						.build();
+				tokens.add(token);
+				return;
+			} catch (Exception e) {
+				throw new RuntimeException("Badly formatted voice");
+			}
+		}
 		if (isHeader) {
 			// use a regex to read the key, value seperated by the :
 			String pattern = "^(.):(.*)";

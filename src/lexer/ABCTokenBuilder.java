@@ -69,6 +69,12 @@ public class ABCTokenBuilder {
 		return this;
 	}
 	
+	public ABCTokenBuilder setVoiceName(String v) {
+		check();
+		obj.voiceName = v;
+		return this;
+	}
+	
 	private void check() {
         if (done) {
         	throw new IllegalArgumentException("Do use other builder to create new instance");
