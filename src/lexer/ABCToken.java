@@ -22,7 +22,7 @@ public class ABCToken {
 		ENDREPEAT
 	}
 	public Lexeme lexeme;
-	public String headerKey;
+	public char headerKey;
 	public String headerValue;
 	
 	public String voiceName;

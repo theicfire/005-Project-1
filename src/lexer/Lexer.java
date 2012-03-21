@@ -16,6 +16,8 @@ public class Lexer {
 	
 	public ABCTokenBuilder curbuilder = null;
 	public int tupletCount = -1;
+	public int fieldCount = 0;
+	public int lastKey = 'Q';
 
 	public Lexer(String fileName) {
 
@@ -55,6 +57,7 @@ public class Lexer {
 			}
 		}
 		if (isHeader) {
+			
 			// use a regex to read the key, value seperated by the :
 			String pattern = "^(.):(.*)";
 
@@ -64,7 +67,15 @@ public class Lexer {
 			// Now create matcher object.
 			Matcher m = r.matcher(line);
 			if (m.find()) {
-				String key = m.group(1);
+				char key = m.group(1).charAt(0);
+				fieldCount += 1;
+				lastKey = key;
+				if ((key == 'X' && fieldCount != 1) || (key != 'X' && fieldCount == 1)) {
+					throw new RuntimeException("X is not the first header");
+				}
+				if ((key == 'T' && fieldCount != 2) || (key != 'T' && fieldCount == 2)) {
+					throw new RuntimeException("T is not the second header");
+				}
 				String value = m.group(2);
 				ABCToken t = ABCTokenBuilder.createBuilder()
 						.setLexeme(ABCToken.Lexeme.HEADER)
@@ -74,6 +85,9 @@ public class Lexer {
 				tokens.add(t);
 			} else {
 				isHeader = false;
+				if (lastKey != 'K') {
+					throw new RuntimeException("last header key is not K");
+				}
 				ABCToken token = ABCTokenBuilder.createBuilder()
 						.setLexeme(ABCToken.Lexeme.STARTSECTION)
 						.build();

@@ -15,7 +15,7 @@ public class ABCTokenBuilder {
 		return obj;
 	}
 	
-	public ABCTokenBuilder setHeaderKey(String k) {
+	public ABCTokenBuilder setHeaderKey(char k) {
 		check();
 		obj.headerKey = k;
 		return this;

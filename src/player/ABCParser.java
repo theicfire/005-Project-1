@@ -28,18 +28,18 @@ public class ABCParser {
 				
 			//header handling is a bitch
 			case HEADER:
-				String key = token.headerKey;
+				char key = token.headerKey;
 				env.headers.put(key, token.headerValue);
 				
-				if (key.equals("C")) {
+				if (key == 'C') {
 					//this header has no effect <composer>		
 					
-				} else if (key.equals("K")) {
+				} else if (key == 'K') {
 					//this is the key signature header.
 					env.globalKeySig = new KeySignature(token.headerValue);
 					env.seenKHeader = true;
 					
-				} else if (key.equals("L")) {
+				} else if (key == 'L') {
 					//this is the default duration header
 					//value has the form DIGIT+/DIGIT+
 					Pattern lengthPattern = Pattern.compile("(\\d+)/(\\d+)");
@@ -53,15 +53,10 @@ public class ABCParser {
 										Integer.parseInt(match.group(2))
 										);	
 					
-				} else if (key.equals("M")) {
-					
-					
-				} else if (key.equals("Q")) {
-					
-				} else if (key.equals("T")) {
-					
-				} else if (key.equals("X")) {
-					
+				} else if (key == 'M') {
+				} else if (key == 'Q') {
+				} else if (key == 'T') {
+				} else if (key == 'X') {
 				}
 				/*
 				C: Name of the composer.
