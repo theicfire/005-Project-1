@@ -18,6 +18,8 @@ public class Lexer {
 	public int tupletCount = -1;
 	public int fieldCount = 0;
 	public int lastKey = 'Q';
+	
+	Fraction chordFraction = null;
 
 	public Lexer(String fileName) {
 
@@ -152,8 +154,13 @@ public class Lexer {
 						octave += modifiers.charAt(j) == ',' ? -1 : 1;
 					}
 					
+					Fraction frac;
+					if (chordFraction != null) {
+						frac = chordFraction;
+					} else {
+						frac = makeFraction(numerator, denom);
+					}
 					
-					Fraction frac = makeFraction(numerator, denom);
 					
 					// accidental stuff
 					if (!accModifiers.isEmpty()) {
@@ -210,8 +217,9 @@ public class Lexer {
 					addToTokens(curbuilder);
 					
 				} else if (c == '[') {
-					// chord or multirepeat
+					// chord or multiending
 					if (line.length() > i + 1 && Character.isDigit(line.charAt(i+1))) {
+						// multiending
 						ABCToken token = ABCTokenBuilder.createBuilder()
 								.setLexeme(ABCToken.Lexeme.MULTIENDING)
 								.setMultiEndingNumber(Integer.parseInt(""+line.charAt(i+1)))
@@ -219,6 +227,35 @@ public class Lexer {
 						tokens.add(token);
 						i += 1;
 					} else {
+						// chord
+						// find the possible scaleing factor to duration of notes in chord
+						int j = i;
+						try {
+						while (line.charAt(j) != ']') {
+							j++;
+						}
+						} catch (Exception e) {
+							throw new RuntimeException("No ending to the chord");
+						}
+						
+						String pattern = "^(\\d)?(/(\\d)?)?";
+						Pattern r = Pattern.compile(pattern);
+						String restOfLine = line.substring(j+1);
+						Matcher m = r.matcher(restOfLine);
+						int numerator = -1;
+						int denom = -1;
+						if (m.find()) {
+							if (m.group(1) != null && m.group(1).length() >= 1) {
+								numerator = Integer.parseInt(m.group(1));
+							}
+							if (m.group(2) != null && m.group(2).length() >= 1) {
+								denom = Integer.parseInt(m.group(2));
+							}
+						} else {
+							throw new RuntimeException("bad chord");
+						}
+						chordFraction = makeFraction(numerator, denom);
+						
 						ABCToken token = ABCTokenBuilder.createBuilder()
 								.setLexeme(ABCToken.Lexeme.STARTCHORD)
 								.build();
@@ -230,6 +267,7 @@ public class Lexer {
 							.setLexeme(ABCToken.Lexeme.ENDCHORD)
 							.build();
 					tokens.add(token);
+					chordFraction = null;
 				} else if (c == '(') {
 					// process tuplet
 					try {
