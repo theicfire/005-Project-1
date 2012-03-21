@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import player.Fraction;
+
 public class Lexer {
 
 	public ArrayList<ABCToken> tokens = new ArrayList<ABCToken>();
@@ -63,11 +65,11 @@ public class Lexer {
 				char c = line.charAt(i);
 				
 				if (Character.isLetter(c)) {
-					// look at the entire note
+					// This is a note. Look at the entire note and process it.
 					String pattern = "^([a-zA-z])([,']*)(\\d)?(/(\\d)?)?";
 					Pattern r = Pattern.compile(pattern);
 					String restOfLine = line.substring(i);
-					System.out.println("found letter, looking over " + restOfLine);
+//					System.out.println("found letter, looking over " + restOfLine);
 					
 					Matcher m = r.matcher(restOfLine);
 					String modifiers = "";
@@ -91,7 +93,7 @@ public class Lexer {
 						if (m.group(5) != null && m.group(5).length() >= 1) {
 							denom = Integer.parseInt(m.group(5));
 						}
-						System.out.println("end result " + noteName + " " + modifiers + " " + numerator + " " + denom);
+//						System.out.println("end result " + noteName + " " + modifiers + " " + numerator + " " + denom);
 					} else {
 						throw new RuntimeException("bad fraction");
 					}
@@ -99,19 +101,43 @@ public class Lexer {
 					for (int j = 0; j < modifiers.length(); j++) {
 						octave += modifiers.charAt(j) == ',' ? -1 : 1;
 					}
+					Fraction frac;
+					if (numerator == -1 && denom == -1) {
+						frac = new Fraction(1, 1);
+					} else {
+						numerator = numerator == -1 ? 1 : numerator;
+						denom = denom == -1 ? 2 : denom;
+						frac = new Fraction(numerator, denom);
+					}
 					curbuilder = ABCTokenBuilder.createBuilder()
 							.setLexeme(ABCToken.Lexeme.NOTE)
 							.setNoteName(Character.toUpperCase(c))
-							.setNoteOctave(octave);
+							.setNoteOctave(octave)
+							.setNoteDuration(frac);
 
 					addToTokens(curbuilder);
 					
-					System.out.println("full group" + m.group(0));
+//					System.out.println("full group" + m.group(0));
 					i += m.group(0).length() - 1; // -1 because 1 is being added at the end
 				} else if (c == '|') {
 					
+				} else if (c == '[') {
+					// process chord
+					
+				} else if (c == '(') {
+					// process tuplet
+					try {
+						c = line.charAt(i+1);
+						int numChars = Integer.parseInt(""+c);
+						String tuple = line.substring(i + 2, i + 2 + numChars);
+						System.out.println("tuple is " + tuple);
+						i += 2 + numChars;
+					} catch (Exception e) {
+						throw new RuntimeException("Could not process tuplet");
+					}
+					
+					
 				}
-				
 			}
 		}
 

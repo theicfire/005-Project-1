@@ -1,5 +1,7 @@
 package lexer;
 
+import player.Fraction;
+
 public class ABCTokenBuilder {
 	private final ABCToken obj = new ABCToken();
 	private boolean done = false;
@@ -55,9 +57,17 @@ public class ABCTokenBuilder {
 		return this;
 	}
 	
+	public ABCTokenBuilder setNoteDuration(Fraction fraction) {
+		check();
+		obj.noteDuration = fraction;
+		return this;
+	}
+	
 	private void check() {
         if (done) {
         	throw new IllegalArgumentException("Do use other builder to create new instance");
         }
 	}
+
+	
 }
