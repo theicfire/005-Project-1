@@ -197,9 +197,27 @@ public class ABCParser {
 				break;
 				
 			case ENDSECTION:
-				//do nothing for now... we cannot have an end section without a 
+				//do nothing for now... we cannot have an end section without a start section..
+				//yuck
+				break;
+			
 			case ENDBAR:
+				//check to make sure that the duration matches OK
+				if (!env.barDuration.equals(env.meter)) {
+					throw new ABCParserException("Bar duration does not match meter");
+				}
+				break;
+				
 			case ENDREPEAT:
+				if (!env.inRepeat) {
+					env.repeatizeTop();
+				}
+				//finishes the last repeat subelement
+				env.curStack.pop();
+				env.newSection();
+				break;
+				
+				
 			}
 			
 			
