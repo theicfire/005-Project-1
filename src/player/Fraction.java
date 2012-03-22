@@ -56,18 +56,38 @@ public class Fraction {
 		}
 	}
 	
-	public boolean equals(Fraction f) {
-		return (f.num*num == f.dom*dom);
-	}
-	
-	public boolean equals(int d) {
-		return this.equals(new Fraction(d,1));
-	}
+
 
 	@Override
 	public String toString() {
 		return "Fraction [num=" + num + ", dom=" + dom + "]";
 	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + dom;
+		result = prime * result + num;
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Fraction other = (Fraction) obj;
+		if (dom != other.dom)
+			return false;
+		if (num != other.num)
+			return false;
+		return true;
+	}
+	
 	
 	
 	
