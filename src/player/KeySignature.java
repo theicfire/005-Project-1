@@ -33,6 +33,7 @@ public class KeySignature {
 	
 	public KeySignature(String key) {
 		HashMap<String, Integer> noteToNum = new HashMap<String, Integer>();
+		//Break down into each possible key-sig case 
 		noteToNum.put("C", 0);
 		noteToNum.put("Am", 0);
 		
@@ -89,6 +90,7 @@ public class KeySignature {
 		
 		keyPitches = new HashMap<Character, Pitch>();
 		modNotes = new HashMap<String, Pitch>();
+		
 		
 		switch (noteToNum.get(key)) {
 		case 0 : 

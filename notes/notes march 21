@@ -1,0 +1,9 @@
+Notes 3/21/2012
+
+Define Exceptions:
+
+Throw runtime exceptions when:
+
+Lexer: tuple with invalid amt of notes i.e. (3ab, X not first header, T not second, last header not K
+number of letters in note != 1, //if numerator greater than 1 digit/?/, incorrectly formatted note i.e a''_, incorrectly formatted rest
+chord with no ending, incorrectly formatted chord, incorrectly formatted tuple, 
