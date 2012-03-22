@@ -22,13 +22,13 @@ public class ABCToken {
 		ENDREPEAT
 	}
 	public Lexeme lexeme;
-	public String headerKey;
+	public char headerKey = '$';
 	public String headerValue;
 	
 	public String voiceName;
 	
 	// [A-G]
-	public char noteName;
+	public char noteName = 'Q'; // some wierd default value
 	
 	/*noteOctave is a number that tells how many octaves from middle C we are
 	 * C --> 0
@@ -40,12 +40,9 @@ public class ABCToken {
 	
 	public Fraction noteDuration;
 	
-	public char accNote;
-	
-	// =, ^, _
-	public String accModifier;
-	
-	public Fraction restDuration;
+	// in the range of -2 to 2
+	// [__->-2....^^->2
+	public int accModifier; 
 	
 	public int startTupletNoteCount;
 	
@@ -54,14 +51,17 @@ public class ABCToken {
 		// builder takes care of everything
 	}
 	
+	public void checkRep() {
+		assert true : "Lexeme is null";
+	}
+	
 	@Override
 	public String toString() {
 		return "ABCToken [lexeme=" + lexeme + ", headerKey=" + headerKey
 				+ ", headerValue=" + headerValue + ", voiceName=" + voiceName
 				+ ", noteName=" + noteName + ", noteOctave=" + noteOctave
-				+ ", noteDuration=" + noteDuration + ", accNote=" + accNote
-				+ ", accModifier=" + accModifier + ", restDuration="
-				+ restDuration + ", startTupletNoteCount="
+				+ ", noteDuration=" + noteDuration
+				+ ", accModifier=" + accModifier + ", startTupletNoteCount="
 				+ startTupletNoteCount + ", multiEndingNumber="
 				+ multiEndingNumber + "]\n";
 	}

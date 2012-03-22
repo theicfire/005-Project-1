@@ -63,5 +63,12 @@ public class Fraction {
 	public boolean equals(int d) {
 		return this.equals(new Fraction(d,1));
 	}
+
+	@Override
+	public String toString() {
+		return "Fraction [num=" + num + ", dom=" + dom + "]";
+	}
+	
+	
 	
 }

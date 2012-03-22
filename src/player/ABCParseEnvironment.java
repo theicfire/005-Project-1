@@ -23,7 +23,7 @@ public class ABCParseEnvironment {
 	 *  - seenKHeader
 	 */
 	
-	HashMap<String,String> headers = new HashMap<String,String>();
+	HashMap<Character,String> headers = new HashMap<Character,String>();
 	
 	HashMap<String,Stack<TuneSequence>> voiceStackMap = new HashMap<String,Stack<TuneSequence>>();
 	TuneParallel rootParallel = new TuneParallel();
