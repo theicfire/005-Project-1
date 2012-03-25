@@ -99,6 +99,12 @@ public class ABCParseEnvironment {
 		curStack.push(newSection);
 	}
 	
+	public void handleNewDenominator(int d) {
+		//adjusts the ticksPerDefaultNote
+		if (! (ticksPerDefaultNote % d == 0) ) {
+			ticksPerDefaultNote *= d;
+		}
+	}
 
 }
 

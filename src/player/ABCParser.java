@@ -97,6 +97,8 @@ public class ABCParser {
 				
 				env.barDuration = env.barDuration.add(duration);
 				
+				env.handleNewDenominator(duration.dom);
+				
 				sound.Pitch miPi = env.barKeySig.getPitch(token.noteName, token.noteOctave);
 				env.curStack.peek().add(TunePrimitive.Note(duration, miPi));
 				break;				
@@ -116,6 +118,8 @@ public class ABCParser {
 				}
 				
 				env.barDuration = env.barDuration.add(token.noteDuration);
+				
+				env.handleNewDenominator(token.noteDuration.dom);
 				
 				env.curStack.peek().add(TunePrimitive.Rest(token.noteDuration));
 				break;				
@@ -185,10 +189,12 @@ public class ABCParser {
 				if (!env.inRepeat) {
 					env.repeatizeTop();
 					env.inRepeat = true;
+					env.newSection();
+				} else {
+					//i dont have to do anything... the preceeding endrepeat has to take care of it
 				}
 				
 				//now close and open a section
-				env.newSection();
 				break;
 				
 			case ENDSECTION:
@@ -205,11 +211,19 @@ public class ABCParser {
 				
 			case ENDREPEAT:
 				if (!env.inRepeat) {
+					//then no multi endings!
 					env.repeatizeTop();
+					//pops the first element of the new repeat off of the stack
+					env.curStack.pop();
+					
+					//closes the repeatable, starts a new section
+					env.newSection();
+				} else {
+					//then there have been multiendings...
+					env.newSection();
 				}
-				//finishes the last repeat subelement
-				env.curStack.pop();
-				env.newSection();
+				
+				
 				break;
 				
 				

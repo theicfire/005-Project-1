@@ -69,6 +69,10 @@ public class Fraction {
 		return "Fraction [num=" + num + ", dom=" + dom + "]";
 	}
 	
+	public String toShortString() {
+		return String.format("%d/%d",num,dom);
+	}
+	
 	
 	
 }

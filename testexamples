@@ -1,0 +1,38 @@
+A B [1 B C :| [2 B E | G F
+
+NOTE(A,1)
+NOTE(B,1)
+MULTIENDING(1)
+NOTE(B,1)
+NOTE(C,1)
+ENDREPEAT
+MULTIENDING(2)
+NOTE(B,1)
+NOTE(E,1)
+ENDBAR
+NOTE(G,1)
+NOTE(F,1)
+
+
+() <-- section
+<> <-- repeats
+
+(
+	<
+		(
+			A
+			B
+		)
+		(
+			B
+			C
+		)
+		(
+			B
+			E
+			G
+			F
+		)
+	>
+)
+	
