@@ -29,7 +29,6 @@ public class Scheduler implements SchedulableVisitor{
 		}
 		
 	}
-	// IMPLAMENT WHEN KNOW HOW DO
 	public void visit(TuneRepeatable r) {
 		if (!r.hasMultipleEndings()) {
 			r.body().accept(this);
@@ -40,10 +39,11 @@ public class Scheduler implements SchedulableVisitor{
 				r.body().accept(this);
 				s.accept(this);				
 			}
-		}
-		
+		}		
 	}
-
+	/*
+	 * Assumes t.multiplier * TICKS_PER_QUARTER can be resolved to an int
+	 */
 	public void visit(Tuple t) {
 		int oldTicks = TICKS_PER_QUARTER;
 		Fraction frac = t.multiplier;
@@ -53,7 +53,9 @@ public class Scheduler implements SchedulableVisitor{
 		}
 		TICKS_PER_QUARTER = oldTicks;
 	}
-	/* assumes that ticks_per_quarter * p.duration is an int*/
+	/* 
+	 * Assumes that ticks_per_quarter * p.duration is an int
+	 */
 	public void visit(TunePrimitive p) {
 		int start = clock;
 		int change = p.duration.times(TICKS_PER_QUARTER).toInt();
@@ -76,7 +78,4 @@ public class Scheduler implements SchedulableVisitor{
 		this.TICKS_PER_QUARTER = ticksPerQuarterNote;
 	}
 	
-//	public Scheduler(ABCEnvironment abc) {
-//		
-//	}
 }

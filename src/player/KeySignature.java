@@ -5,11 +5,19 @@ import java.util.HashMap;
 import sound.Pitch;
 
 public class KeySignature {
+	
+	// Holds Standard Key mappings
 	private HashMap<Character, Pitch> keyPitches;
+	
+	// Holds modified Key mappings for when accidentals
+	// are used
 	private HashMap<String, Pitch> modNotes;
+	
+	// True if a standard Key Signature
+	// False if has been modified
 	public final boolean modified;
 	
-	
+	// Returns midi pitch mapped to the given note
 	public Pitch getPitch(char note, int octave) {
 		if (!modified)
 			return keyPitches.get(note).octaveTranspose(octave);
@@ -21,7 +29,14 @@ public class KeySignature {
 		}
 		
 	}
-	// Change modifier to int
+	
+	/* Returns a new KeySignature of the same key with the given note modification
+	 modifier = 0 --> natural (=)
+	 modifier = 1 --> sharp (#)
+	 modifier = 2 --> double sharp (##)
+	 modifier = -1 --> flat (b)
+	 modifier = -2 --> double flat (bb)
+	 */	
 	public KeySignature fromAccidental(char name, int modifier, int octave) {		
 		HashMap<Character, Pitch> keySig = (HashMap<Character, Pitch>) keyPitches.clone();
 		HashMap<String, Pitch> mod = (HashMap<String, Pitch>) modNotes.clone();
@@ -33,6 +48,7 @@ public class KeySignature {
 	
 	public KeySignature(String key) {
 		HashMap<String, Integer> noteToNum = new HashMap<String, Integer>();
+		
 		//Break down into each possible key-sig case 
 		noteToNum.put("C", 0);
 		noteToNum.put("Am", 0);
@@ -88,10 +104,11 @@ public class KeySignature {
 		noteToNum.put("D#", 17);
 		noteToNum.put("B#m", 17);
 		
+		
 		keyPitches = new HashMap<Character, Pitch>();
 		modNotes = new HashMap<String, Pitch>();
 		
-		
+		// Build Key mapping based on given case 
 		switch (noteToNum.get(key)) {
 		case 0 : 
 			keyPitches.put('C', new Pitch('C'));
@@ -259,10 +276,11 @@ public class KeySignature {
 			break;
 		}
 		
+		// Indicates that this new KeySignature has not been modified
 		modified = false;
 	
 	}
-	
+	// Private constructor to build modified KeySignatures
 	private KeySignature(HashMap<Character, Pitch> keyMap, HashMap<String, Pitch> modMap) {
 		keyPitches = keyMap;
 		modified = true;
