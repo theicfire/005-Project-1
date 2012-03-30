@@ -10,7 +10,33 @@ public class ABCEnvironment {
 	int ticksPerDefaultNote;
 	int tempo;
 	
-	public void setHeader(String k,String v) {
+	public void setHeader(char c,String v) {
+		
+		String k = "none";
+		switch (c) {
+		case 'X':
+			k = "Track Number";
+			break;
+		case 'T':
+			k = "Title";
+			break;
+		case 'C':
+			k = "Composer";
+			break;
+		case 'M':
+			k = "Meter";
+			break;
+		case 'L':
+			k = "Default note length";
+			break;
+		case 'K':
+			k = "Key Signature";
+			break;
+		case 'Q':
+			k = "Tempo";
+			break;
+		}
+		
 		headers.put(k, v);
 	}
 	

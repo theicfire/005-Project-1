@@ -1,6 +1,7 @@
 package player;
 
 import java.util.HashMap;
+
 import java.util.Stack;
 
 public class ABCParseEnvironment {
@@ -26,7 +27,7 @@ public class ABCParseEnvironment {
 	HashMap<Character,String> headers = new HashMap<Character,String>();
 	
 	HashMap<String,Stack<TuneSequence>> voiceStackMap = new HashMap<String,Stack<TuneSequence>>();
-	TuneParallel rootParallel = new TuneParallel();
+	Stack<TuneSequence> baseSequences = new Stack();
 	Stack<TuneSequence> curStack = null;
 	
 	int ticksPerDefaultNote;
@@ -34,7 +35,9 @@ public class ABCParseEnvironment {
 	//defaults meter: 4/4, tempo: 100DefaultNotesPerMinute, default note length: 1/8
 	Fraction meter = new Fraction(4,4);
 	Fraction defaultLength = new Fraction(1,8);
-	int tempo;
+	int tempo = 100;
+
+
 	
 	//statestuff
 	boolean inBody = false;
@@ -70,7 +73,7 @@ public class ABCParseEnvironment {
 		//I DONT HAVE TO DO THAT! (already done. when they are created)
 		
 		//mimic a new bar for the key signature scope
-		barKeySig = globalKeySig;
+		resetBar();
 		
 	}
 	
@@ -97,6 +100,17 @@ public class ABCParseEnvironment {
 		curStack.pop(); //close the old one
 		curStack.peek().add(newSection);
 		curStack.push(newSection);
+	}
+	
+	public void resetBar() {
+		barDuration = new Fraction(0,1);
+		barKeySig = globalKeySig;
+	}
+	
+	public void checkBarDuration() {
+		if (!barDuration.equals(meter)) {
+			throw new ABCParserException("Bar duration does not match meter");
+		}
 	}
 	
 	public void handleNewDenominator(int d) {

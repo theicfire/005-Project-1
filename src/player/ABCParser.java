@@ -54,10 +54,45 @@ public class ABCParser {
 										);	
 					
 				} else if (key == 'M') {
+					//this is the meter header
+					//value has the form C | C\| | DIGIT+/DIGIT+
+					Fraction meter = null;
+					if (token.headerValue.equals("C")) {
+						meter = new Fraction(4,4);
+					} else if (token.headerValue.equals("C|")) {
+						meter = new Fraction(2,2);
+					} else {
+						//the regex match
+						Pattern meterPattern = Pattern.compile("(\\d+)/(\\d+)");
+						Matcher match = meterPattern.matcher(token.headerValue);
+						if (!match.matches()) {
+							throw new ABCParserException("Meter header value invalid");
+						}
+						
+						env.meter = meter;
+						
+					}
+					
 				} else if (key == 'Q') {
+					//the tempo header
+					int tempoValue;
+					try {
+						tempoValue = Integer.parseInt(token.headerValue);
+					} catch (NumberFormatException e) {
+						throw new ABCParserException("Tempo value is invalid");
+					}
+					
+					if (tempoValue <= 0) {
+						throw new ABCParserException("Tempo cannot be less than or equal to 0");
+					}
+					env.tempo = tempoValue;					
+					
 				} else if (key == 'T') {
+					env.seenTHeader = true;
 				} else if (key == 'X') {
+					env.seenXHeader = true;
 				}
+				
 				/*
 				C: Name of the composer.
 				K: Key, which determines the key signature for the piece.
@@ -79,6 +114,7 @@ public class ABCParser {
 					
 					//the base sequence for this voice
 					TuneSequence baseSequence = new TuneSequence();
+					env.baseSequences.push(baseSequence);
 					//the first sequence within this voice
 					TuneSequence firstSequence = new TuneSequence();
 					baseSequence.add(firstSequence);
@@ -170,8 +206,7 @@ public class ABCParser {
 			case STARTBAR:
 				env.checkBody();
 				
-				env.barDuration = new Fraction(0,1);
-				env.barKeySig = env.globalKeySig;
+				env.resetBar();
 				break;
 				
 			case STARTREPEAT:
@@ -204,9 +239,8 @@ public class ABCParser {
 			
 			case ENDBAR:
 				//check to make sure that the duration matches OK
-				if (!env.barDuration.equals(env.meter)) {
-					throw new ABCParserException("Bar duration does not match meter");
-				}
+				env.checkBarDuration();
+				
 				break;
 				
 			case ENDREPEAT:
@@ -233,20 +267,27 @@ public class ABCParser {
 			
 		}
 		
-		
-		return new ABCEnvironment();
-		
-	}
-	
-	
-	private int getTicksPQ(int current,int newDom) {
-		
-		if (current % newDom != 0) {
-			current = current*newDom;
+		TuneParallel rootParallel = new TuneParallel();
+		for (TuneSequence s : env.baseSequences) {
+			rootParallel.add(s);
 		}
-		return current;
+		
+		
+		ABCEnvironment outenv = new ABCEnvironment();
+		
+		//passing the headers over
+		for (char c : env.headers.keySet()) {
+			outenv.setHeader(c, env.headers.get(c));
+		}
+		
+		outenv.setTempo(env.tempo);
+		outenv.setTicksPerDefaultNote(env.ticksPerDefaultNote);
+		outenv.setTreeRoot(rootParallel);
+		
+		return outenv;
 		
 	}
+	
 	
 	
 }
