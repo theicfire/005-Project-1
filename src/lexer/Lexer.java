@@ -1,8 +1,10 @@
 package lexer;
 
 import java.io.BufferedReader;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -21,29 +23,51 @@ public class Lexer {
 	
 	Fraction chordFraction = null;
 
+	public Lexer() {
+		tokens = new ArrayList<ABCToken>();
+	}
 	public Lexer(String fileName) {
-
-		// read file line by line
-		try {
-			BufferedReader input = new BufferedReader(new FileReader(fileName));
+		this(fileName, true);
+	}
+	
+	public Lexer(String inp, boolean isFileName) {
+		BufferedReader input;
+		if (isFileName) {
+			// read file line by line
 			try {
-				String line = null; // not declared within while loop
+				input = new BufferedReader(new FileReader(inp));
+				try {
+					String line = null; // not declared within while loop
+					while ((line = input.readLine()) != null) {
+						this.readLine(line);
+					}
+				} finally {
+					input.close();
+				}
+			} catch (IOException ex) {
+				ex.printStackTrace();
+			}
+		} else {
+			input = new BufferedReader(new StringReader(inp));
+			String line = null;
+			try {
 				while ((line = input.readLine()) != null) {
 					this.readLine(line);
 				}
-			} finally {
-				input.close();
+			} catch (IOException e) {
+				e.printStackTrace();
 			}
-		} catch (IOException ex) {
-			ex.printStackTrace();
+			ABCToken token = ABCTokenBuilder.createBuilder()
+					.setLexeme(ABCToken.Lexeme.ENDSECTION)
+					.build();
+			tokens.add(token);
 		}
-		
-		System.out.println("Done" + tokens);
+
 	}
 
 	// given a line from the file, parse it
 	public void readLine(String line) {
-		// TODO: make sure x is first
+		System.out.println("reading line" + line);
 		if (!line.isEmpty() && line.charAt(0) == 'V') {
 			// voice header
 			try {
@@ -94,27 +118,42 @@ public class Lexer {
 						.setLexeme(ABCToken.Lexeme.STARTSECTION)
 						.build();
 				tokens.add(token);
-				
-				
-				// TAKE OUT
-				token = ABCTokenBuilder.createBuilder()
-						.build();
-				tokens.add(token);
 			}
 		} 
 		if (!isHeader) {
 			for (int i = 0; i < line.length(); i++) {
 				char c = line.charAt(i);
 				
-				// See if we should put an ENDTUPLET in and if states are correct
-				updateTuplet(c);
-				
-				if (startsNote(c)) {
-					// This is a note. Look at the entire note and process it.
-					String pattern = "^([\\^=_]{0,2})([a-zA-z])([,']*)(\\d)?(/(\\d)?)?";
+				if (c == 'z') {
+					String pattern = "^z(\\d)?(/(\\d)?)?";
 					Pattern r = Pattern.compile(pattern);
 					String restOfLine = line.substring(i);
-//					System.out.println("found letter, looking over " + restOfLine);
+					
+					Matcher m = r.matcher(restOfLine);
+					int numerator = -1;
+					int denom = -1;
+					if (m.find()) {
+						if (m.group(1) != null && m.group(1).length() >= 1) {
+							numerator = Integer.parseInt(m.group(1));
+						}
+						if (m.group(3) != null && m.group(3).length() >= 1) {
+							denom = Integer.parseInt(m.group(3));
+						}
+					} else {
+						throw new RuntimeException("bad rest");
+					}
+					Fraction frac = makeFraction(numerator, denom);
+
+					curbuilder = ABCTokenBuilder.createBuilder()
+							.setLexeme(ABCToken.Lexeme.REST)
+							.setNoteDuration(frac);
+					addToTokens(curbuilder);
+					
+				} else if (startsNote(c)) {
+					// This is a note. Look at the entire note and process it.
+					String pattern = "^([\\^=_]{0,2})([a-zA-z])([,']*)(\\d+)?(/(\\d+)?)?";
+					Pattern r = Pattern.compile(pattern);
+					String restOfLine = line.substring(i);
 					
 					Matcher m = r.matcher(restOfLine);
 					String modifiers = "";
@@ -130,12 +169,9 @@ public class Lexer {
 						if (m.group(2).length() != 1) {
 							throw new RuntimeException("Wrong note format");
 						}
-						noteName = m.group(2).charAt(0);
+						noteName = Character.toUpperCase(m.group(2).charAt(0));
 						if (m.group(3) != null) {
 							modifiers = m.group(3); // like ''' or something
-						}
-						if (m.group(4) != null && m.group(4).length() > 1) {
-							throw new RuntimeException("Wrong numerator format");
 						}
 						if (m.group(4) != null && m.group(4).length() >= 1) {
 							numerator = Integer.parseInt(m.group(4));
@@ -143,7 +179,6 @@ public class Lexer {
 						if (m.group(6) != null && m.group(6).length() >= 1) {
 							denom = Integer.parseInt(m.group(6));
 						}
-//						System.out.println("end result " + noteName + " " + modifiers + " " + numerator + " " + denom);
 					} else {
 						throw new RuntimeException("bad note");
 					}
@@ -188,34 +223,7 @@ public class Lexer {
 
 					addToTokens(curbuilder);
 					
-//					System.out.println("full group" + m.group(0));
 					i += m.group(0).length() - 1; // -1 because 1 is being added at the end
-				} else if (c == 'z') {
-					
-					String pattern = "^z(\\d)?(/(\\d)?)?";
-					Pattern r = Pattern.compile(pattern);
-					String restOfLine = line.substring(i);
-					
-					Matcher m = r.matcher(restOfLine);
-					int numerator = -1;
-					int denom = -1;
-					if (m.find()) {
-						if (m.group(1) != null && m.group(1).length() >= 1) {
-							numerator = Integer.parseInt(m.group(1));
-						}
-						if (m.group(2) != null && m.group(2).length() >= 1) {
-							denom = Integer.parseInt(m.group(2));
-						}
-					} else {
-						throw new RuntimeException("bad rest");
-					}
-					Fraction frac = makeFraction(numerator, denom);
-
-					curbuilder = ABCTokenBuilder.createBuilder()
-							.setLexeme(ABCToken.Lexeme.REST)
-							.setNoteDuration(frac);
-					addToTokens(curbuilder);
-					
 				} else if (c == '[') {
 					// chord or multiending
 					if (line.length() > i + 1 && Character.isDigit(line.charAt(i+1))) {
@@ -231,9 +239,9 @@ public class Lexer {
 						// find the possible scaleing factor to duration of notes in chord
 						int j = i;
 						try {
-						while (line.charAt(j) != ']') {
-							j++;
-						}
+							while (line.charAt(j) != ']') {
+								j++;
+							}
 						} catch (Exception e) {
 							throw new RuntimeException("No ending to the chord");
 						}
@@ -248,12 +256,13 @@ public class Lexer {
 							if (m.group(1) != null && m.group(1).length() >= 1) {
 								numerator = Integer.parseInt(m.group(1));
 							}
-							if (m.group(2) != null && m.group(2).length() >= 1) {
-								denom = Integer.parseInt(m.group(2));
+							if (m.group(3) != null && m.group(3).length() >= 1) {
+								denom = Integer.parseInt(m.group(3));
 							}
 						} else {
-							throw new RuntimeException("bad chord");
+							throw new RuntimeException("bad chord fraction");
 						}
+						System.out.println("and here");
 						chordFraction = makeFraction(numerator, denom);
 						
 						ABCToken token = ABCTokenBuilder.createBuilder()
@@ -274,7 +283,6 @@ public class Lexer {
 						c = line.charAt(i+1);
 						int numChars = Integer.parseInt(""+c);
 						String tuple = line.substring(i + 2, i + 2 + numChars);
-						System.out.println("tuple is " + tuple);
 						tupletCount = numChars;
 						
 						ABCToken token = ABCTokenBuilder.createBuilder()
@@ -298,7 +306,7 @@ public class Lexer {
 							i += 1;
 						}
 					} catch (Exception e) {
-						throw new RuntimeException("Could not process tuplet");
+						throw new RuntimeException("Could not process end repeat");
 					}
 				} else if (c == '|') {
 					// endbar, start repeat, or end section
@@ -325,6 +333,8 @@ public class Lexer {
 						tokens.add(token);
 					}
 				}
+				// See if we should put an ENDTUPLET in and if states are correct
+				updateTuplet(c);
 			}
 		}
 	}
@@ -341,9 +351,12 @@ public class Lexer {
 	}
 	
 	public void updateTuplet(char c) {
-		if (tupletCount > 0 && !startsNote(c)) {
-				throw new RuntimeException("Tokens other than notes are in tuplet");
+		System.out.println("updating tuplet" + tupletCount);
+		if (tupletCount > 0 && (!startsNote(c) && !Character.isDigit(c))) {
+			System.out.println("badd" + c);
+			throw new RuntimeException("Tokens other than notes are in tuplet");
 		} else if (tupletCount == 0) {
+			System.out.println("tap that");
 			ABCToken token = ABCTokenBuilder.createBuilder()
 					.setLexeme(ABCToken.Lexeme.ENDTUPLET)
 					.build();
