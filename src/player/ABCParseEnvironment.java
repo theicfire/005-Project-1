@@ -30,7 +30,7 @@ public class ABCParseEnvironment {
 	Stack<TuneSequence> baseSequences = new Stack();
 	Stack<TuneSequence> curStack = null;
 	
-	int ticksPerDefaultNote;
+	int ticksPerDefaultNote = 1;
 	
 	//defaults meter: 4/4, tempo: 100DefaultNotesPerMinute, default note length: 1/8
 	Fraction meter = new Fraction(4,4);
@@ -71,6 +71,11 @@ public class ABCParseEnvironment {
 		
 		//instantiate the voices that we have
 		//I DONT HAVE TO DO THAT! (already done. when they are created)
+		//but i do have to check to make sure that i have at least one voice.
+		//and if i dont, i have to pretend
+		if (baseSequences.size()==0) {
+			curStack = createVoice("default");
+		}
 		
 		//mimic a new bar for the key signature scope
 		resetBar();
@@ -81,6 +86,24 @@ public class ABCParseEnvironment {
 		if (!inBody) {
 			switchToBody();
 		}
+	}
+	
+	public Stack<TuneSequence> createVoice(String voiceName) {
+		//the new stack for this voice
+		Stack<TuneSequence> newStack = new Stack<TuneSequence>();
+		//linking the voice to it
+		voiceStackMap.put(voiceName, newStack);
+		
+		//the base sequence for this voice
+		TuneSequence baseSequence = new TuneSequence();
+		baseSequences.push(baseSequence);
+		//the first sequence within this voice
+		TuneSequence firstSequence = new TuneSequence();
+		baseSequence.add(firstSequence);
+		newStack.push(baseSequence);
+		newStack.push(firstSequence);
+		
+		return newStack;
 	}
 	
 	public void repeatizeTop() {
@@ -108,6 +131,9 @@ public class ABCParseEnvironment {
 	}
 	
 	public void checkBarDuration() {
+		
+		System.out.println(barDuration +" "+meter);
+		System.out.println(barDuration.equals(meter));
 		if (!barDuration.equals(meter)) {
 			throw new ABCParserException("Bar duration does not match meter");
 		}

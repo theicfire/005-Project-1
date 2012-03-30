@@ -67,7 +67,7 @@ public class Lexer {
 
 	// given a line from the file, parse it
 	public void readLine(String line) {
-		System.out.println("reading line" + line);
+		//System.out.println("reading line" + line);
 		if (!line.isEmpty() && line.charAt(0) == 'V') {
 			// voice header
 			try {
@@ -331,6 +331,10 @@ public class Lexer {
 								.setLexeme(ABCToken.Lexeme.ENDBAR)
 								.build();
 						tokens.add(token);
+						token = ABCTokenBuilder.createBuilder()
+								.setLexeme(ABCToken.Lexeme.STARTBAR)
+								.build();
+						tokens.add(token);
 					}
 				}
 				// See if we should put an ENDTUPLET in and if states are correct
@@ -351,7 +355,7 @@ public class Lexer {
 	}
 	
 	public void updateTuplet(char c) {
-		System.out.println("updating tuplet" + tupletCount);
+		//System.out.println("updating tuplet" + tupletCount);
 		if (tupletCount > 0 && (!startsNote(c) && !Character.isDigit(c))) {
 			System.out.println("badd" + c);
 			throw new RuntimeException("Tokens other than notes are in tuplet");
@@ -367,6 +371,9 @@ public class Lexer {
 	// TODO: remove
 	public static void main(String [] args) {
 		Lexer l = new Lexer("sample_abc/paddy.abc");
+		for (ABCToken t : l.tokens) {
+			System.out.print(t.toString());
+		}
 	}
 	
 	

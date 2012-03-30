@@ -107,19 +107,8 @@ public class ABCParser {
 			case VOICE:
 				
 				if (!env.inBody) {
-					//the new stack for this voice
-					Stack<TuneSequence> newStack = new Stack<TuneSequence>();
-					//linking the voice to it
-					env.voiceStackMap.put(token.voiceName, newStack);
-					
-					//the base sequence for this voice
-					TuneSequence baseSequence = new TuneSequence();
-					env.baseSequences.push(baseSequence);
-					//the first sequence within this voice
-					TuneSequence firstSequence = new TuneSequence();
-					baseSequence.add(firstSequence);
-					newStack.push(baseSequence);
-					newStack.push(firstSequence);
+					env.createVoice(token.voiceName);
+
 					
 				}
 				env.curStack = env.voiceStackMap.get(token.voiceName);
@@ -131,7 +120,7 @@ public class ABCParser {
 				//adds the note to the top of the current stack
 				Fraction duration = token.noteDuration;
 				
-				env.barDuration = env.barDuration.add(duration);
+				env.barDuration = env.barDuration.add(duration.times(env.defaultLength));
 				
 				env.handleNewDenominator(duration.dom);
 				
@@ -153,7 +142,7 @@ public class ABCParser {
 					env.switchToBody();
 				}
 				
-				env.barDuration = env.barDuration.add(token.noteDuration);
+				env.barDuration = env.barDuration.add(token.noteDuration.times(env.defaultLength));
 				
 				env.handleNewDenominator(token.noteDuration.dom);
 				
@@ -267,6 +256,11 @@ public class ABCParser {
 			
 		}
 		
+		//one last measure test, only if duration != 0
+		if (!env.barDuration.equals(0)) {
+			env.checkBarDuration();
+		}
+		
 		TuneParallel rootParallel = new TuneParallel();
 		for (TuneSequence s : env.baseSequences) {
 			rootParallel.add(s);
@@ -281,7 +275,10 @@ public class ABCParser {
 		}
 		
 		outenv.setTempo(env.tempo);
-		outenv.setTicksPerDefaultNote(env.ticksPerDefaultNote);
+		
+		//multiply by 6 in case of tuples
+		outenv.setTicksPerDefaultNote(env.ticksPerDefaultNote*6);
+		
 		outenv.setTreeRoot(rootParallel);
 		
 		return outenv;

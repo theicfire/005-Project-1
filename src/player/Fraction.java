@@ -24,7 +24,7 @@ public class Fraction {
 		
 		int new_dom = dom * f.dom;
 		
-		return new Fraction(new_num,new_dom);
+		return new Fraction(new_num,new_dom).reduce();
 	}
 	
 	public Fraction times(Fraction f) {
@@ -32,7 +32,7 @@ public class Fraction {
 		int new_num = num * f.num;
 		int new_dom = dom * f.dom;
 		
-		return new Fraction(new_num,new_dom);
+		return new Fraction(new_num,new_dom).reduce();
 	}
 	
 	public Fraction times(int i) {
@@ -54,6 +54,38 @@ public class Fraction {
 		} else {
 			return num/dom;
 		}
+	}
+	
+	public Fraction reduce() {
+		//returns a fraction reduced to its lowest form
+		//find the gcd of a and b using pseudo code on wikipedia
+		//http://en.wikipedia.org/wiki/Euclidean_algorithm#Greatest_common_divisor
+		
+		if (num == dom) {
+			return new Fraction(1,1);
+		}
+		
+
+		int a = (num < dom) ? num : dom;
+		int b = (num < dom) ? dom : num;
+		while (b!=0) {
+			int temp = b;
+			b = a%b;
+			a = temp;
+		}
+		int gcd = a;
+		
+		int newNum = num/gcd;
+		int newDom = dom/gcd;
+		
+		return new Fraction(newNum,newDom);
+		
+		
+		
+	}
+	
+	public static Fraction reduce(Fraction f) {
+		return f.reduce();
 	}
 	
 
@@ -78,14 +110,25 @@ public class Fraction {
 			return true;
 		if (obj == null)
 			return false;
+		
+		if (obj instanceof Integer) {
+			return this.equals(new Fraction((Integer) obj,1));
+		}
+		
 		if (getClass() != obj.getClass())
 			return false;
+		
 		Fraction other = (Fraction) obj;
-		if (dom != other.dom)
-			return false;
-		if (num != other.num)
-			return false;
-		return true;
+		
+		//need to use cross multiply unless we can guarantee
+		//that all fractions will be in lowest form,
+		//which we can't yet.
+		
+		int left = num*other.dom;
+		int right = dom*other.num;
+		
+		return left==right;
+
 	}
 	
 	
