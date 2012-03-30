@@ -111,6 +111,8 @@ public class Lexer {
 				tokens.add(t);
 			} else {
 				isHeader = false;
+				
+				//why is this here?
 				if (lastKey != 'K') {
 					throw new RuntimeException("last header key is not K");
 				}
