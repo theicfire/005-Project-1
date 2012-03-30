@@ -92,7 +92,7 @@ public class ABCParserTest {
 		//default note length is 1/8
 		//default meter is 4/4
 		
-		l.readLine("A2/1 B2/1 A2/1 B2/1");
+		l.readLine("z2 B2 A4/ B2/1");
 		
 		for (ABCToken s : l.tokens) {
 			print(s);

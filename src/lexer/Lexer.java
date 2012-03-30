@@ -112,14 +112,6 @@ public class Lexer {
 			} else {
 				isHeader = false;
 				
-				//why is this here?
-				if (lastKey != 'K') {
-					throw new RuntimeException("last header key is not K");
-				}
-				ABCToken token = ABCTokenBuilder.createBuilder()
-						.setLexeme(ABCToken.Lexeme.STARTSECTION)
-						.build();
-				tokens.add(token);
 			}
 		} 
 		if (!isHeader) {
@@ -135,12 +127,23 @@ public class Lexer {
 					int numerator = -1;
 					int denom = -1;
 					if (m.find()) {
+						
+						//numerator
 						if (m.group(1) != null && m.group(1).length() >= 1) {
 							numerator = Integer.parseInt(m.group(1));
 						}
-						if (m.group(3) != null && m.group(3).length() >= 1) {
-							denom = Integer.parseInt(m.group(3));
+						
+						//denominator
+						if (m.group(2) != null && m.group(2).length() >= 1) {
+							if (m.group(3) != null && m.group(3).length() >= 1) {
+								denom = Integer.parseInt(m.group(3));
+							} else {
+								denom = 2;
+							}
+						} else {
+							denom = 1;
 						}
+							
 					} else {
 						throw new RuntimeException("bad rest");
 					}
@@ -153,7 +156,7 @@ public class Lexer {
 					
 				} else if (startsNote(c)) {
 					// This is a note. Look at the entire note and process it.
-					String pattern = "^([\\^=_]{0,2})([a-zA-z])([,']*)(\\d+)?(/(\\d+)?)?";
+					String pattern = "^([\\^=_]{0,2})([a-gA-G])([,']*)(\\d+)?(/(\\d+)?)?";
 					Pattern r = Pattern.compile(pattern);
 					String restOfLine = line.substring(i);
 					
@@ -175,12 +178,24 @@ public class Lexer {
 						if (m.group(3) != null) {
 							modifiers = m.group(3); // like ''' or something
 						}
+						
+						//numerator
 						if (m.group(4) != null && m.group(4).length() >= 1) {
 							numerator = Integer.parseInt(m.group(4));
 						}
-						if (m.group(6) != null && m.group(6).length() >= 1) {
-							denom = Integer.parseInt(m.group(6));
+						
+						//denominator
+						if (m.group(5) != null && m.group(5).length() >= 1) {
+							if (m.group(6) != null && m.group(6).length() >= 1) {
+								denom = Integer.parseInt(m.group(6));
+							} else {
+								denom = 2;
+							}
+						} else {
+							denom = 1;
 						}
+						
+						
 					} else {
 						throw new RuntimeException("bad note");
 					}
