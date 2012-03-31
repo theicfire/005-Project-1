@@ -88,6 +88,9 @@ public class Fraction {
 		return f.reduce();
 	}
 	
+	public boolean greaterThan(Fraction f) {
+		return num*f.dom > dom*f.num;
+	}
 
 
 	@Override

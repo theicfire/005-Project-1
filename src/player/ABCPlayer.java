@@ -17,6 +17,18 @@ public class ABCPlayer {
             e.printStackTrace();
 		}
 	}
+	
+	public static void playEnvironment(ABCEnvironment env) {
+		Scheduler s = new Scheduler(env.tempo, env.ticksPerDefaultNote);
+		Schedulable root = env.getTreeRoot();
+		root.accept(s);
+		try {
+			s.PLAYER.play();
+		} catch (MidiUnavailableException e) {
+            e.printStackTrace();
+		}
+	}
+	
 	public static void main(String args[]) {
 		play("sample_abc/sample1.abc");
 	}

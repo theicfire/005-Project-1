@@ -120,8 +120,7 @@ public class ABCParser {
 				//adds the note to the top of the current stack
 				Fraction duration = token.noteDuration;
 				
-				env.barDuration = env.barDuration.add(duration.times(env.defaultLength));
-				
+				env.updateDuration(duration);				
 				env.handleNewDenominator(duration.dom);
 				
 				sound.Pitch miPi = env.barKeySig.getPitch(token.noteName, token.noteOctave);
@@ -142,8 +141,7 @@ public class ABCParser {
 					env.switchToBody();
 				}
 				
-				env.barDuration = env.barDuration.add(token.noteDuration.times(env.defaultLength));
-				
+				env.updateDuration(token.noteDuration);
 				env.handleNewDenominator(token.noteDuration.dom);
 				
 				env.curStack.peek().add(TunePrimitive.Rest(token.noteDuration));
@@ -155,6 +153,8 @@ public class ABCParser {
 				Chord newChord = new Chord();
 				env.curStack.peek().add(newChord);
 				env.curStack.push(newChord);
+				
+				env.chordLength = new Fraction(0,1);
 				env.inChord = true;
 				break;
 	
@@ -164,6 +164,10 @@ public class ABCParser {
 				}
 				
 				env.curStack.pop();
+
+				//handle adding the chord duration
+				env.barDuration = env.barDuration.add(env.chordLength.times(env.defaultLength));
+				
 				env.inChord = false;
 				break;
 				
@@ -171,6 +175,9 @@ public class ABCParser {
 				env.checkBody();
 				
 				Tuple newTuplet = new Tuple(token.startTupletNoteCount);
+				
+				env.tupleMultiplier = newTuplet.multiplier;
+				
 				env.curStack.peek().add(newTuplet);
 				env.curStack.push(newTuplet);
 				env.inTuplet = true;
@@ -180,6 +187,8 @@ public class ABCParser {
 				if (!env.inTuplet) {
 					throw new ABCParserException("End tuplet cannot come before new tuplet!");
 				}
+				
+				env.tupleMultiplier = null;
 				
 				env.curStack.pop();
 				env.inTuplet = false;
@@ -251,6 +260,7 @@ public class ABCParser {
 				
 				
 			}
+
 			
 			
 			

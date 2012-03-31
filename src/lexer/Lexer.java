@@ -85,7 +85,7 @@ public class Lexer {
 		if (isHeader) {
 			
 			// use a regex to read the key, value seperated by the :
-			String pattern = "^(.):(.*)";
+			String pattern = "^([^|]):(.*)";
 
 			// Create a Pattern object
 			Pattern r = Pattern.compile(pattern);
@@ -206,12 +206,14 @@ public class Lexer {
 						octave += modifiers.charAt(j) == ',' ? -1 : 1;
 					}
 					
-					Fraction frac;
+					Fraction frac = makeFraction(numerator,denom);
+					/*
 					if (chordFraction != null) {
 						frac = chordFraction;
 					} else {
 						frac = makeFraction(numerator, denom);
 					}
+					*/
 					
 					
 					// accidental stuff
@@ -355,7 +357,9 @@ public class Lexer {
 					}
 				}
 				// See if we should put an ENDTUPLET in and if states are correct
-				updateTuplet(c);
+				if (!Character.isWhitespace(c)) {
+					updateTuplet(c);
+				}
 			}
 		}
 	}
@@ -373,7 +377,7 @@ public class Lexer {
 	
 	public void updateTuplet(char c) {
 		//System.out.println("updating tuplet" + tupletCount);
-		if (tupletCount > 0 && (!startsNote(c) && !Character.isDigit(c))) {
+		if (tupletCount > 0 && (!startsNote(c) && !Character.isDigit(c) && !Character.isWhitespace(c))) {
 			System.out.println("badd" + c);
 			throw new RuntimeException("Tokens other than notes are in tuplet");
 		} else if (tupletCount == 0) {

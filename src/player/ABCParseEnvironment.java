@@ -27,7 +27,7 @@ public class ABCParseEnvironment {
 	HashMap<Character,String> headers = new HashMap<Character,String>();
 	
 	HashMap<String,Stack<TuneSequence>> voiceStackMap = new HashMap<String,Stack<TuneSequence>>();
-	Stack<TuneSequence> baseSequences = new Stack();
+	Stack<TuneSequence> baseSequences = new Stack<TuneSequence>();
 	Stack<TuneSequence> curStack = null;
 	
 	int ticksPerDefaultNote = 1;
@@ -44,6 +44,9 @@ public class ABCParseEnvironment {
 	boolean inRepeat = false;
 	boolean inChord = false;
 	boolean inTuplet = false;
+	
+	Fraction tupleMultiplier = null;
+	Fraction chordLength = new Fraction(0,1);
 	
 	//keeping track of duration within bar
 	Fraction barDuration = new Fraction(0,1);
@@ -130,12 +133,25 @@ public class ABCParseEnvironment {
 		barKeySig = globalKeySig;
 	}
 	
+	public void updateDuration(Fraction d) {
+		
+		if (inChord) {
+			if (d.greaterThan(chordLength)) {
+				chordLength = d;
+			}
+		} else if (inTuplet) {
+			barDuration = barDuration.add(d.times(tupleMultiplier.times(defaultLength)));
+		} else {
+			barDuration = barDuration.add(d.times(defaultLength));
+		}
+		
+	}
+	
 	public void checkBarDuration() {
 		
-		System.out.println(barDuration +" "+meter);
-		System.out.println(barDuration.equals(meter));
 		if (!barDuration.equals(meter)) {
-			throw new ABCParserException("Bar duration does not match meter");
+			throw new ABCParserException(
+					String.format("Bar duration (%s) does not match meter (%s)",barDuration.toShortString(),meter.toShortString()));
 		}
 	}
 	
