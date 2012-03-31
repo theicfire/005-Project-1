@@ -318,14 +318,55 @@ public class ABCParserTest {
 	public void chordTupleTest() {
 		Lexer l = getBasicHeaderLexer();
 		l.readLine("(3 [C2 E2 G2] [E2 G2 B2] [E2 G2 c2] c/A/F/A/ [c2 A2 F2] |");
-		l.readLine("(3 [C2 E2 G2] [E2 G2 B2] [E2 G2 c2] (3 c/3B/3A/3 (3G/3F/3G/3 (3A/3B/3z/3 [c2 A2 F2]");
+
 		
 		for (ABCToken t : l.tokens) {
 			print(t);
 		}
 		ABCEnvironment e = ABCParser.parse(l.tokens);
-		print(e);
-		play(e);
+		
+		ABCEnvironment expected = getDefaultEnv();
+		KeySignature keySig = new KeySignature("C");
+		TuneParallel baseParallel = new TuneParallel();
+		TuneSequence baseSequence = new TuneSequence();
+		TuneSequence subSequence = new TuneSequence();
+		
+		subSequence.add(new Tuple(3)
+				.add(new Chord()
+					.add(TunePrimitive.Note(two, keySig.getPitch('C', 0)))
+					.add(TunePrimitive.Note(two, keySig.getPitch('E', 0)))
+					.add(TunePrimitive.Note(two, keySig.getPitch('G', 0)))
+				)
+				.add(new Chord()
+					.add(TunePrimitive.Note(two, keySig.getPitch('E', 0)))
+					.add(TunePrimitive.Note(two, keySig.getPitch('G', 0)))
+					.add(TunePrimitive.Note(two, keySig.getPitch('B', 0)))
+				)
+				.add(new Chord()
+					.add(TunePrimitive.Note(two, keySig.getPitch('E', 0)))
+					.add(TunePrimitive.Note(two, keySig.getPitch('G', 0)))
+					.add(TunePrimitive.Note(two, keySig.getPitch('C', 1)))
+				)
+			)
+			.add(TunePrimitive.Note(half, keySig.getPitch('C', 1)))
+			.add(TunePrimitive.Note(half, keySig.getPitch('A', 0)))
+			.add(TunePrimitive.Note(half, keySig.getPitch('F', 0)))
+			.add(TunePrimitive.Note(half, keySig.getPitch('A', 0)))
+			.add(new Chord()
+				.add(TunePrimitive.Note(two, keySig.getPitch('C', 1)))
+				.add(TunePrimitive.Note(two, keySig.getPitch('A', 0)))
+				.add(TunePrimitive.Note(two, keySig.getPitch('F', 0)))
+			);
+		
+		
+		baseSequence.add(subSequence);
+		baseParallel.add(baseSequence);
+		expected.setTicksPerDefaultNote(12);
+		expected.setTreeRoot(baseParallel);
+		
+		
+		assert expected.equals(e);
+		
 	}
 	
 }
