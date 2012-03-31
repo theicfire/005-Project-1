@@ -356,10 +356,7 @@ public class Lexer {
 						tokens.add(token);
 					}
 				}
-				// See if we should put an ENDTUPLET in and if states are correct
-				if (!Character.isWhitespace(c)) {
-					updateTuplet(c);
-				}
+
 			}
 		}
 	}
@@ -375,20 +372,7 @@ public class Lexer {
 		tokens.add(tokenBuilder.build()); // this does the check to see if everything is ok
 	}
 	
-	public void updateTuplet(char c) {
-		//System.out.println("updating tuplet" + tupletCount);
-		if (tupletCount > 0 && (!startsNote(c) && !Character.isDigit(c) && !Character.isWhitespace(c))) {
-			System.out.println("badd" + c);
-			throw new RuntimeException("Tokens other than notes are in tuplet");
-		} else if (tupletCount == 0) {
-			System.out.println("tap that");
-			ABCToken token = ABCTokenBuilder.createBuilder()
-					.setLexeme(ABCToken.Lexeme.ENDTUPLET)
-					.build();
-			tokens.add(token);
-		}
-		tupletCount -= 1;
-	}
+
 	// TODO: remove
 	public static void main(String [] args) {
 		Lexer l = new Lexer("sample_abc/paddy.abc");

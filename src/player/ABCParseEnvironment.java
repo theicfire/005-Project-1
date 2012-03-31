@@ -46,6 +46,7 @@ public class ABCParseEnvironment {
 	boolean inTuplet = false;
 	
 	Fraction tupleMultiplier = null;
+	int tupletCount;
 	Fraction chordLength = new Fraction(0,1);
 	
 	//keeping track of duration within bar
@@ -126,6 +127,17 @@ public class ABCParseEnvironment {
 		curStack.pop(); //close the old one
 		curStack.peek().add(newSection);
 		curStack.push(newSection);
+	}
+	
+	public void checkTuplet() {
+		if (inTuplet) {
+			//then the top o' the stack is a tuple
+			//if im not in a chord, and i've filled up the tuplet, pop it away
+			if (!inChord && tupletCount == curStack.peek().contents.size()) {
+				curStack.pop();
+				inTuplet = false;
+			}
+		}
 	}
 	
 	public void resetBar() {

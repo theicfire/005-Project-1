@@ -3,6 +3,7 @@ package player;
 public class Tuple extends TuneSequence {
 
 	Fraction multiplier = null;
+	int noteCount;
 	
 	public Tuple(int noteCount) {
 		switch (noteCount) {
@@ -18,6 +19,7 @@ public class Tuple extends TuneSequence {
 			default:
 				throw new RuntimeException(String.format("Note count to Tuple must be either 2,3, or 4, not %d",noteCount));
 		}
+		this.noteCount = noteCount;
 	}
 	
 	@Override

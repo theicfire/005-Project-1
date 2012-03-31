@@ -35,7 +35,7 @@ public class ABCParserTest {
 	Fraction three = new Fraction(3,1);
 	Fraction four = new Fraction(4,1);
 	
-	
+	boolean playAll = false;
 	
 	
 	//so i can hear things!
@@ -120,6 +120,8 @@ public class ABCParserTest {
 		
 		ABCEnvironment e = ABCParser.parse(l.tokens);
 		
+		if (playAll) play(e);
+		
 		ABCEnvironment expected = getDefaultEnv();
 		
 		//lets build this fucking expected tree!
@@ -156,6 +158,7 @@ public class ABCParserTest {
 		Lexer l = getBasicHeaderLexer();
 		l.readLine("A B z z C z F z");
 		ABCEnvironment e = ABCParser.parse(l.tokens);
+		if (playAll) play(e);
 		
 		ABCEnvironment expected = getDefaultEnv();
 		KeySignature keySig = new KeySignature("C");
@@ -191,8 +194,7 @@ public class ABCParserTest {
 		Lexer l = getBasicHeaderLexer();
 		l.readLine("z2 a A A, z c/4 d/4 e/4 f/4 G | G z/ f/2 c'1/2 b'/ a'/4 g/4 f/4 e/4 e2 E2 | C4 G,2 F2 | C,,8");
 		ABCEnvironment e = ABCParser.parse(l.tokens);
-		//print(e);
-		//play(e);
+		if (playAll) play(e);
 		
 		ABCEnvironment expected = getDefaultEnv();
 		KeySignature keySig = new KeySignature("C");
@@ -248,6 +250,8 @@ public class ABCParserTest {
 		Lexer l = getBasicHeaderLexer();
 		l.readLine("[bdf] a4 [c3e3g3]");
 		ABCEnvironment e = ABCParser.parse(l.tokens);
+		if (playAll) play(e);
+		
 		
 		ABCEnvironment expected = getDefaultEnv();
 		KeySignature keySig = new KeySignature("C");
@@ -281,6 +285,7 @@ public class ABCParserTest {
 		Lexer l  = getBasicHeaderLexer();
 		l.readLine("(3CzC (2E/E/ B5/2 A2");
 		ABCEnvironment e = ABCParser.parse(l.tokens);
+		if (playAll) play(e);
 		
 		ABCEnvironment expected = getDefaultEnv();
 		KeySignature keySig = new KeySignature("C");
@@ -312,7 +317,7 @@ public class ABCParserTest {
 	@Test
 	public void chordTupleTest() {
 		Lexer l = getBasicHeaderLexer();
-		l.readLine("(3 [C2E2G2] [E2G2B2] [E2G2c2] c/a/ F/a/ [c2a2F2]");
+		l.readLine("(3 [C2 E2 G2] [E2 G2 B2] [E2 G2 c2] c/a/F/a/ [c2 a2 F2]");
 		
 		for (ABCToken t : l.tokens) {
 			print(t);

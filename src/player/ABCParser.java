@@ -166,9 +166,10 @@ public class ABCParser {
 				env.curStack.pop();
 
 				//handle adding the chord duration
-				env.barDuration = env.barDuration.add(env.chordLength.times(env.defaultLength));
 				
 				env.inChord = false;
+				env.updateDuration(env.chordLength);
+				
 				break;
 				
 			case STARTTUPLET:
@@ -177,6 +178,7 @@ public class ABCParser {
 				Tuple newTuplet = new Tuple(token.startTupletNoteCount);
 				
 				env.tupleMultiplier = newTuplet.multiplier;
+				env.tupletCount = newTuplet.noteCount;
 				
 				env.curStack.peek().add(newTuplet);
 				env.curStack.push(newTuplet);
@@ -189,6 +191,7 @@ public class ABCParser {
 				}
 				
 				env.tupleMultiplier = null;
+				env.tupletCount = 0;
 				
 				env.curStack.pop();
 				env.inTuplet = false;
@@ -260,6 +263,10 @@ public class ABCParser {
 				
 				
 			}
+			
+			
+			//checking if we should dump our tuple
+			env.checkTuplet();
 
 			
 			
