@@ -317,7 +317,8 @@ public class ABCParserTest {
 	@Test
 	public void chordTupleTest() {
 		Lexer l = getBasicHeaderLexer();
-		l.readLine("(3 [C2 E2 G2] [E2 G2 B2] [E2 G2 c2] c/a/F/a/ [c2 a2 F2]");
+		l.readLine("(3 [C2 E2 G2] [E2 G2 B2] [E2 G2 c2] c/A/F/A/ [c2 A2 F2] |");
+		l.readLine("(3 [C2 E2 G2] [E2 G2 B2] [E2 G2 c2] (3 c/3B/3A/3 (3G/3F/3G/3 (3A/3B/3z/3 [c2 A2 F2]");
 		
 		for (ABCToken t : l.tokens) {
 			print(t);
