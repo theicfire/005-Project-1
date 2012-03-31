@@ -319,11 +319,9 @@ public class ABCParserTest {
 		Lexer l = getBasicHeaderLexer();
 		l.readLine("(3 [C2 E2 G2] [E2 G2 B2] [E2 G2 c2] c/A/F/A/ [c2 A2 F2] |");
 
-		
-		for (ABCToken t : l.tokens) {
-			print(t);
-		}
 		ABCEnvironment e = ABCParser.parse(l.tokens);
+		
+		if (playAll) play(e);
 		
 		ABCEnvironment expected = getDefaultEnv();
 		KeySignature keySig = new KeySignature("C");
@@ -366,6 +364,58 @@ public class ABCParserTest {
 		
 		
 		assert expected.equals(e);
+		
+	}
+	
+	//some accidental tests!
+	@Test
+	public void basicAccidentalTest() {
+		
+		Lexer l = getBasicHeaderLexer();
+		//basic headers put us in C
+		l.readLine("F F ^F F _F F =F F");
+		
+		for (ABCToken t : l.tokens) {
+			print(t);
+		}
+		
+		ABCEnvironment e = ABCParser.parse(l.tokens);
+
+		if (playAll) play(e);
+		
+		ABCEnvironment expected = getDefaultEnv();
+		KeySignature keySig = new KeySignature("C");
+		TuneParallel baseParallel = new TuneParallel();
+		TuneSequence baseSequence = new TuneSequence();
+		TuneSequence subSequence = new TuneSequence();
+		
+		subSequence.add(TunePrimitive.Note(one, keySig.getPitch('F', 0)))
+			.add(TunePrimitive.Note(one, keySig.getPitch('F', 0)));
+		
+		keySig = keySig.fromAccidental('F', 1, 0);
+		subSequence.add(TunePrimitive.Note(one, keySig.getPitch('F', 0)))
+			.add(TunePrimitive.Note(one, keySig.getPitch('F', 0)));
+		
+		keySig = keySig.fromAccidental('F', -1, 0);
+		subSequence.add(TunePrimitive.Note(one, keySig.getPitch('F', 0)))
+			.add(TunePrimitive.Note(one, keySig.getPitch('F', 0)));
+		
+		keySig = keySig.fromAccidental('F', 0, 0);
+		subSequence.add(TunePrimitive.Note(one, keySig.getPitch('F', 0)))
+			.add(TunePrimitive.Note(one, keySig.getPitch('F', 0)));
+		
+		baseSequence.add(subSequence);
+		baseParallel.add(baseSequence);
+		expected.setTreeRoot(baseParallel);
+		assert expected.equals(e);
+		
+	}
+	
+	//now we need to test accidental functionality across octaves
+	@Test
+	public void multiOctaveAccidentalTest() {
+		
+		
 		
 	}
 	

@@ -167,6 +167,7 @@ public class Lexer {
 					int numerator = -1;
 					int denom = -1;
 					char noteName;
+					char rawNoteName;
 					if (m.find()) {
 						if (m.group(1) != null) {
 							accModifiers = m.group(1); // like ^^ or something
@@ -174,7 +175,8 @@ public class Lexer {
 						if (m.group(2).length() != 1) {
 							throw new RuntimeException("Wrong note format");
 						}
-						noteName = Character.toUpperCase(m.group(2).charAt(0));
+						rawNoteName = m.group(2).charAt(0);
+						noteName = Character.toUpperCase(rawNoteName);
 						if (m.group(3) != null) {
 							modifiers = m.group(3); // like ''' or something
 						}
@@ -201,7 +203,7 @@ public class Lexer {
 					}
 					
 					// octave stuff; looking for things like ''' or ,,
-					int octave = Character.isLowerCase(c) ? 1 : 0;
+					int octave = Character.isLowerCase(rawNoteName) ? 1 : 0;
 					for (int j = 0; j < modifiers.length(); j++) {
 						octave += modifiers.charAt(j) == ',' ? -1 : 1;
 					}
@@ -281,7 +283,7 @@ public class Lexer {
 						} else {
 							throw new RuntimeException("bad chord fraction");
 						}
-						System.out.println("and here");
+
 						chordFraction = makeFraction(numerator, denom);
 						
 						ABCToken token = ABCTokenBuilder.createBuilder()
