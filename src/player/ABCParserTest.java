@@ -410,13 +410,54 @@ public class ABCParserTest {
 		assert expected.equals(e);
 		
 	}
-	
+		
 	//now we need to test accidental functionality across octaves
 	@Test
 	public void multiOctaveAccidentalTest() {
 		
-		
+		assert false;
 		
 	}
+	
+	//accidentals across bars
+	@Test
+	public void multiBarAccidentalTest() {
+		
+		assert false;
+	}
+	
+	//accidentals across sections
+	@Test
+	public void multiSectionAccidentalTest() {
+		
+		assert false;
+	}
+	
+	//tests still to write:
+	//repeat, single, left and right
+	//repeat, single, start of piece, right
+	//repeat, single, section, right
+	//repeat, multi, left
+	//repeat, multi, beginning of peice
+	//repeat, multi, section
+	
+	//nested single repeat
+	
+	//mutli ending eith a repeat in the second ending (the rest of the piece durr...)
+	
+	//accidentals and repeat boundary (only
+	//	simple single
+	//	simple multi)
+	
+	//VOICES
+	//actually not that hard. just have some voices thrown in, simple, complex
+	//probably around 4 tests though.
+	
+	//and then all the header edge case tests
+	//like tempo!
+	//TEMPO is tricky
+	
+	//and i guess all the error cases too!!!! FUCK
+	//gah. thats a lot of work.
 	
 }
