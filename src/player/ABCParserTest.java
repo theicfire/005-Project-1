@@ -35,7 +35,7 @@ public class ABCParserTest {
 	Fraction three = new Fraction(3,1);
 	Fraction four = new Fraction(4,1);
 	
-	boolean playAll = false;
+	boolean playAll = true;
 	
 	
 	//so i can hear things!
