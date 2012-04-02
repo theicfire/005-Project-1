@@ -67,7 +67,7 @@ public class Lexer {
 
 	// given a line from the file, parse it
 	public void readLine(String line) {
-		System.out.println("reading line" + line);
+		//System.out.println("reading line" + line);
 		if (!line.isEmpty() && line.charAt(0) == 'V') {
 			// voice header
 			try {
@@ -85,7 +85,7 @@ public class Lexer {
 		if (isHeader) {
 			
 			// use a regex to read the key, value seperated by the :
-			String pattern = "^(.):(.*)";
+			String pattern = "^([^|]):(.*)";
 
 			// Create a Pattern object
 			Pattern r = Pattern.compile(pattern);
@@ -111,13 +111,7 @@ public class Lexer {
 				tokens.add(t);
 			} else {
 				isHeader = false;
-				if (lastKey != 'K') {
-					throw new RuntimeException("last header key is not K");
-				}
-				ABCToken token = ABCTokenBuilder.createBuilder()
-						.setLexeme(ABCToken.Lexeme.STARTSECTION)
-						.build();
-				tokens.add(token);
+				
 			}
 		} 
 		if (!isHeader) {
@@ -133,12 +127,23 @@ public class Lexer {
 					int numerator = -1;
 					int denom = -1;
 					if (m.find()) {
+						
+						//numerator
 						if (m.group(1) != null && m.group(1).length() >= 1) {
 							numerator = Integer.parseInt(m.group(1));
 						}
-						if (m.group(3) != null && m.group(3).length() >= 1) {
-							denom = Integer.parseInt(m.group(3));
+						
+						//denominator
+						if (m.group(2) != null && m.group(2).length() >= 1) {
+							if (m.group(3) != null && m.group(3).length() >= 1) {
+								denom = Integer.parseInt(m.group(3));
+							} else {
+								denom = 2;
+							}
+						} else {
+							denom = 1;
 						}
+							
 					} else {
 						throw new RuntimeException("bad rest");
 					}
@@ -151,7 +156,7 @@ public class Lexer {
 					
 				} else if (startsNote(c)) {
 					// This is a note. Look at the entire note and process it.
-					String pattern = "^([\\^=_]{0,2})([a-zA-z])([,']*)(\\d+)?(/(\\d+)?)?";
+					String pattern = "^([\\^=_]{0,2})([a-gA-G])([,']*)(\\d+)?(/(\\d+)?)?";
 					Pattern r = Pattern.compile(pattern);
 					String restOfLine = line.substring(i);
 					
@@ -162,6 +167,7 @@ public class Lexer {
 					int numerator = -1;
 					int denom = -1;
 					char noteName;
+					char rawNoteName;
 					if (m.find()) {
 						if (m.group(1) != null) {
 							accModifiers = m.group(1); // like ^^ or something
@@ -169,32 +175,47 @@ public class Lexer {
 						if (m.group(2).length() != 1) {
 							throw new RuntimeException("Wrong note format");
 						}
-						noteName = Character.toUpperCase(m.group(2).charAt(0));
+						rawNoteName = m.group(2).charAt(0);
+						noteName = Character.toUpperCase(rawNoteName);
 						if (m.group(3) != null) {
 							modifiers = m.group(3); // like ''' or something
 						}
+						
+						//numerator
 						if (m.group(4) != null && m.group(4).length() >= 1) {
 							numerator = Integer.parseInt(m.group(4));
 						}
-						if (m.group(6) != null && m.group(6).length() >= 1) {
-							denom = Integer.parseInt(m.group(6));
+						
+						//denominator
+						if (m.group(5) != null && m.group(5).length() >= 1) {
+							if (m.group(6) != null && m.group(6).length() >= 1) {
+								denom = Integer.parseInt(m.group(6));
+							} else {
+								denom = 2;
+							}
+						} else {
+							denom = 1;
 						}
+						
+						
 					} else {
 						throw new RuntimeException("bad note");
 					}
 					
 					// octave stuff; looking for things like ''' or ,,
-					int octave = Character.isLowerCase(c) ? 1 : 0;
+					int octave = Character.isLowerCase(rawNoteName) ? 1 : 0;
 					for (int j = 0; j < modifiers.length(); j++) {
 						octave += modifiers.charAt(j) == ',' ? -1 : 1;
 					}
 					
-					Fraction frac;
+					Fraction frac = makeFraction(numerator,denom);
+					/*
 					if (chordFraction != null) {
 						frac = chordFraction;
 					} else {
 						frac = makeFraction(numerator, denom);
 					}
+					*/
 					
 					
 					// accidental stuff
@@ -262,7 +283,7 @@ public class Lexer {
 						} else {
 							throw new RuntimeException("bad chord fraction");
 						}
-						System.out.println("and here");
+
 						chordFraction = makeFraction(numerator, denom);
 						
 						ABCToken token = ABCTokenBuilder.createBuilder()
@@ -331,10 +352,13 @@ public class Lexer {
 								.setLexeme(ABCToken.Lexeme.ENDBAR)
 								.build();
 						tokens.add(token);
+						token = ABCTokenBuilder.createBuilder()
+								.setLexeme(ABCToken.Lexeme.STARTBAR)
+								.build();
+						tokens.add(token);
 					}
 				}
-				// See if we should put an ENDTUPLET in and if states are correct
-				updateTuplet(c);
+
 			}
 		}
 	}
@@ -350,23 +374,13 @@ public class Lexer {
 		tokens.add(tokenBuilder.build()); // this does the check to see if everything is ok
 	}
 	
-	public void updateTuplet(char c) {
-		System.out.println("updating tuplet" + tupletCount);
-		if (tupletCount > 0 && (!startsNote(c) && !Character.isDigit(c))) {
-			System.out.println("badd" + c);
-			throw new RuntimeException("Tokens other than notes are in tuplet");
-		} else if (tupletCount == 0) {
-			System.out.println("tap that");
-			ABCToken token = ABCTokenBuilder.createBuilder()
-					.setLexeme(ABCToken.Lexeme.ENDTUPLET)
-					.build();
-			tokens.add(token);
-		}
-		tupletCount -= 1;
-	}
+
 	// TODO: remove
 	public static void main(String [] args) {
 		Lexer l = new Lexer("sample_abc/paddy.abc");
+		for (ABCToken t : l.tokens) {
+			System.out.print(t.toString());
+		}
 	}
 	
 	

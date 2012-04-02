@@ -8,8 +8,9 @@ public class TuneSequence implements Schedulable,Iterable<Schedulable> {
 	
 	Stack<Schedulable> contents = new Stack<Schedulable>();
 	
-	public void add(Schedulable s) {
+	public TuneSequence add(Schedulable s) {
 		contents.push(s);
+		return this;
 	}
 	
 	public Iterator<Schedulable> iterator() {

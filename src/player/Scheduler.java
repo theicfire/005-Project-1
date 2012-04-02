@@ -23,10 +23,20 @@ public class Scheduler implements SchedulableVisitor{
 	}
 	public void visit(TuneParallel p) {
 		int beforeClock = clock;
+		
+		//keep track of the latest clock
+		//for example, a chord with a half note and
+		//a quarter note will move the clock two beats foward
+		//regardless of the order in which they are played
+		int latestNewClock = clock;
+		
 		for (Schedulable s : p) {
 			clock = beforeClock;
 			s.accept(this);
+			latestNewClock = (clock > latestNewClock) ? clock : latestNewClock;
 		}
+		
+		clock = latestNewClock;
 		
 	}
 	public void visit(TuneRepeatable r) {
