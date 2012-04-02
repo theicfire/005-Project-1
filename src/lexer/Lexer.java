@@ -69,7 +69,6 @@ public class Lexer {
 	public void readLine(String line) {
 //		System.out.println("reading line" + line);
 		if (line.indexOf('%') != -1) { // take out comments
-			System.out.println("found at " + line.indexOf('%'));
 			line = line.substring(0, line.indexOf('%'));
 		}
 		if (line.isEmpty()) {
