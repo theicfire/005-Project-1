@@ -8,14 +8,14 @@ L:1/16
 Q:400
 K:Am
 V:1
-e^d|e^deB=dc|A2 z CEA|B2 z E^GB|c2 z Ee^d|
+e^d|:e^deB=dc|A2 z CEA|B2 z E^GB|c2 z Ee^d|
 V:2
-z2|z6|A,,E,A, z z2|E,,E,^G, z z2|A,,E,A, z z2|
+z2|:z6|A,,E,A, z z2|E,,E,^G, z z2|A,,E,A, z z2|
 %
 V:1
-e^deB=dc|A2 z CEA|B2 z EcB|[1A2 z2:|[2A2z Bcd|
+e^deB=dc|A2 z CEA|B2 z EcB|[1A2 z2 e^d:|[2A2z Bcd|
 V:2
-z6|A,,E,A, z z2|E,,E,^G, z z2|[1A,,E,A, z :|[2A,,E,A, z z2|
+z6|A,,E,A, z z2|E,,E,^G, z z2|[1A,,E,A, z z2:|[2A,,E,A, z z2|
 %
 V:1
 |:e3 Gfe|d3 Fed|c3 Edc|B2 z Ee z|z ee' z z ^d|

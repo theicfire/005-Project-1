@@ -26,13 +26,13 @@ public class ABCPlayerTest {
 		ABCPlayer.play("sample_abc/sample2.abc");
 	}
 	
-	@Test 
+	
 	public void playTest3() {
 		ABCPlayer.play("sample_abc/sample3.abc");
 	}
 	
 	@Test
 	public void playTestHard() {
-		ABCPlayer.play("sample_abc/debussy.abc");
+		ABCPlayer.play("sample_abc/fur_elise.abc");
 	}
 }
