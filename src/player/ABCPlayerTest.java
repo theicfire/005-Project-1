@@ -18,17 +18,17 @@ import org.junit.Test;
 public class ABCPlayerTest {
 	@Test
 	public void playTest1() {
-		ABCPlayer.play("sample_abc/sample1.abc");
+		//ABCPlayer.play("sample_abc/sample1.abc");
 	}
 	
 	@Test
 	public void playTest2() {			
-		ABCPlayer.play("sample_abc/sample2.abc");
+		//ABCPlayer.play("sample_abc/sample2.abc");
 	}
 	
 	@Test
 	public void playTest3() {
-		ABCPlayer.play("sample_abc/sample3.abc");
+		//ABCPlayer.play("sample_abc/sample3.abc");
 	}
 	
 	@Test

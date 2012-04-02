@@ -71,7 +71,7 @@ public class Lexer {
 		if (!line.isEmpty() && line.charAt(0) == 'V') {
 			// voice header
 			try {
-				String voiceName = line.substring(2);
+				String voiceName = line.substring(2).trim();
 				ABCToken token = ABCTokenBuilder.createBuilder()
 						.setLexeme(ABCToken.Lexeme.VOICE)
 						.setVoiceName(voiceName)
@@ -102,7 +102,7 @@ public class Lexer {
 				if ((key == 'T' && fieldCount != 2) || (key != 'T' && fieldCount == 2)) {
 					throw new RuntimeException("T is not the second header");
 				}
-				String value = m.group(2);
+				String value = m.group(2).trim();
 				ABCToken t = ABCTokenBuilder.createBuilder()
 						.setLexeme(ABCToken.Lexeme.HEADER)
 						.setHeaderKey(key)
