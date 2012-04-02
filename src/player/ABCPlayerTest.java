@@ -20,8 +20,6 @@ import lexer.*;
 import org.junit.Test;
 
 public class ABCPlayerTest {
-	
-	
 	private void printAndPlay(String file) {
 		Lexer l = new Lexer(file);
 		ABCEnvironment e = ABCParser.parse(l.tokens);

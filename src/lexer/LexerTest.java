@@ -133,5 +133,16 @@ public class LexerTest {
 				"c''|:(3A,,Bf:|[1z1/4[2_a'2[c,,,b]1/3", false);
 		
 	}
+	
+	@Test
+	public void testComments() {
+		Lexer l = new Lexer("X:1\n" + 
+				"T:Trad.\n" +
+				"K:D % and some stuff\n" +
+				"% stuff\n" +
+				"c''|:(3A,,Bf:|[1z1/4[2_a'2[c,,,b]", false);		
+		assertTrue(true);
+		
+	}
 
 }
