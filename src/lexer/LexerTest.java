@@ -14,7 +14,7 @@ public class LexerTest {
 		Lexer l = new Lexer("X:1\n" + 
 			"T:Trad.\n" +
 			"K:D\n" +
-			"c''|:(3A,,Bf:|[1z1/4[2_a'2[c,,,b]1/3", false);
+			"c''|:(3A,,Bf:|[1z1/4[2_a'2[c,,,b]", false);
 		Lexer ans = new Lexer();
 		ans.tokens.add(ABCTokenBuilder.createBuilder()
 				.setLexeme(ABCToken.Lexeme.HEADER)
@@ -30,9 +30,6 @@ public class LexerTest {
 				.setLexeme(ABCToken.Lexeme.HEADER)
 				.setHeaderKey('K')
 				.setHeaderValue("D")
-				.build());
-		ans.tokens.add(ABCTokenBuilder.createBuilder()
-				.setLexeme(ABCToken.Lexeme.STARTSECTION)
 				.build());
 		ans.tokens.add(ABCTokenBuilder.createBuilder()
 				.setLexeme(ABCToken.Lexeme.NOTE)
@@ -68,9 +65,6 @@ public class LexerTest {
 				.setNoteDuration(new Fraction(1, 1))
 				.build());
 		ans.tokens.add(ABCTokenBuilder.createBuilder()
-				.setLexeme(ABCToken.Lexeme.ENDTUPLET)
-				.build());
-		ans.tokens.add(ABCTokenBuilder.createBuilder()
 				.setLexeme(ABCToken.Lexeme.ENDREPEAT)
 				.build());
 		ans.tokens.add(ABCTokenBuilder.createBuilder()
@@ -88,14 +82,14 @@ public class LexerTest {
 		ans.tokens.add(ABCTokenBuilder.createBuilder()
 				.setLexeme(ABCToken.Lexeme.ACCIDENTAL)
 				.setNoteName('A')
-				.setNoteOctave(1)
+				.setNoteOctave(2)
 				.setAccModifier(-1)
 				.build());
 		ans.tokens.add(ABCTokenBuilder.createBuilder()
 				.setLexeme(ABCToken.Lexeme.NOTE)
 				.setNoteName('A')
-				.setNoteOctave(1)
-				.setNoteDuration(new Fraction(2, 2))
+				.setNoteOctave(2)
+				.setNoteDuration(new Fraction(2, 1))
 				.build());
 		
 		ans.tokens.add(ABCTokenBuilder.createBuilder()
@@ -105,14 +99,14 @@ public class LexerTest {
 				.setLexeme(ABCToken.Lexeme.NOTE)
 				.setNoteName('C')
 				.setNoteOctave(-2)
-				.setNoteDuration(new Fraction(1, 3))
+				.setNoteDuration(new Fraction(1, 1))
 				.build());
 		
 		ans.tokens.add(ABCTokenBuilder.createBuilder()
 				.setLexeme(ABCToken.Lexeme.NOTE)
 				.setNoteName('B')
 				.setNoteOctave(1)
-				.setNoteDuration(new Fraction(1, 3))
+				.setNoteDuration(new Fraction(1, 1))
 				.build());
 		ans.tokens.add(ABCTokenBuilder.createBuilder()
 				.setLexeme(ABCToken.Lexeme.ENDCHORD)
@@ -122,7 +116,22 @@ public class LexerTest {
 		ans.tokens.add(ABCTokenBuilder.createBuilder()
 				.setLexeme(ABCToken.Lexeme.ENDSECTION)
 				.build());
-		System.out.println(l.tokens);
+//		System.out.println(l.tokens);
 		assertEquals(l.tokens, ans.tokens);
+//		for (int i = 0; i < l.tokens.size(); i++) {
+//			System.out.println(i + " " + l.tokens.get(i));
+//			assertEquals(l.tokens.get(i), ans.tokens.get(i));
+//		}
 	}
+	
+	@Test(expected=RuntimeException.class)
+	public void testBadLoc() {
+		Lexer l = new Lexer("V:upper\n" +
+				"X:1\n" +
+				"T:Trad.\n" +
+				"K:D\n" +
+				"c''|:(3A,,Bf:|[1z1/4[2_a'2[c,,,b]1/3", false);
+		
+	}
+
 }

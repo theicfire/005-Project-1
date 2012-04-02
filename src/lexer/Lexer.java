@@ -67,7 +67,7 @@ public class Lexer {
 
 	// given a line from the file, parse it
 	public void readLine(String line) {
-		//System.out.println("reading line" + line);
+//		System.out.println("reading line" + line);
 		if (!line.isEmpty() && line.charAt(0) == 'V') {
 			// voice header
 			try {
@@ -77,6 +77,10 @@ public class Lexer {
 						.setVoiceName(voiceName)
 						.build();
 				tokens.add(token);
+				fieldCount += 1;
+				if (fieldCount == 1 || fieldCount == 2) {
+					throw new RuntimeException("X or T are in the wrong place");
+				}
 				return;
 			} catch (Exception e) {
 				throw new RuntimeException("Badly formatted voice");
