@@ -18,6 +18,6 @@ public class ABCPlayer {
 		}
 	}
 	public static void main(String args[]) {
-		play("sample_abc/sample1.abc");
+		play("sample_abc/piece2.abc");
 	}
 }
