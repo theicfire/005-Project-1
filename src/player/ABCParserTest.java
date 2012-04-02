@@ -35,7 +35,7 @@ public class ABCParserTest {
 	Fraction three = new Fraction(3,1);
 	Fraction four = new Fraction(4,1);
 	
-	boolean playAll = true;
+	boolean playAll = false;
 	
 	
 	//so i can hear things!
@@ -375,10 +375,6 @@ public class ABCParserTest {
 		//basic headers put us in C
 		l.readLine("F F ^F F _F F =F F");
 		
-		for (ABCToken t : l.tokens) {
-			print(t);
-		}
-		
 		ABCEnvironment e = ABCParser.parse(l.tokens);
 
 		if (playAll) play(e);
@@ -442,7 +438,22 @@ public class ABCParserTest {
 	}
 	
 	//tests still to write:
+	
 	//repeat, single, left and right
+	@Test
+	public void singleLeftRight() {
+		Lexer l = getBasicHeaderLexer();
+		//basic headers put us in C
+		l.readLine("|: C E G c G E C [C2E2G2] :|");
+		
+		for (ABCToken t : l.tokens) {
+			print(t);
+		}
+		ABCEnvironment e = ABCParser.parse(l.tokens);
+		print(e);
+		play(e);
+	}
+	
 	//repeat, single, start of piece, right
 	//repeat, single, section, right
 	//repeat, multi, left

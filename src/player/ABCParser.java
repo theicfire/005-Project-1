@@ -115,7 +115,6 @@ public class ABCParser {
 				//ASSUMING NO MID-BAR VOICE CHANGES
 				env.barDuration = new Fraction(0,1);
 				
-				System.out.println("Voice "+env.inBody + "-"+token.voiceName+'-');
 				if (!env.inBody) {
 					env.createVoice(token.voiceName);	
 				}

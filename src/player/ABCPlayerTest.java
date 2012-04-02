@@ -46,7 +46,7 @@ public class ABCPlayerTest {
 	
 	@Test
 	public void barbieGirl() {
-		printAndPlay("sample_abc/barbieGirl.abc");
+		printAndPlay("sample_abc/little_night_music.abc");
 	}
 	
 	@Test
