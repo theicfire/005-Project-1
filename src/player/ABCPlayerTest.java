@@ -50,6 +50,11 @@ public class ABCPlayerTest {
 	}
 	
 	@Test
+	public void yesterDay() {
+		printAndPlay("sample_abc/yesterday.abc");
+	}
+	
+	@Test
 	public void playTestHard() {
 		printAndPlay("sample_abc/fur_elise.abc");
 	}
