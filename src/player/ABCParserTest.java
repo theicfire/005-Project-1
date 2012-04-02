@@ -444,7 +444,57 @@ public class ABCParserTest {
 	public void singleLeftRight() {
 		Lexer l = getBasicHeaderLexer();
 		//basic headers put us in C
-		l.readLine("|: C E G c G E C [C2E2G2] :|");
+		l.readLine("a b CCCCCC |: C E G c G E C [CEG] :|");
+		
+		ABCEnvironment e = ABCParser.parse(l.tokens);
+		//print(e);
+		//play(e);
+	}
+	
+	//repeat, single, start of piece, right
+	@Test
+	public void startOfPieceRight() {
+		Lexer l = getBasicHeaderLexer();
+		//basic headers put us in C
+		l.readLine("C E G c G E C [CEG] :|");
+		
+		ABCEnvironment e = ABCParser.parse(l.tokens);
+		//print(e);
+		//play(e);
+	}
+	
+
+	//repeat, single, section, right
+	@Test
+	public void sectionPieceRight() {
+		Lexer l = getBasicHeaderLexer();
+		//basic headers put us in C
+		l.readLine("aaaaaaaa |]|: C E G c G E C [CEG] :|");
+		
+		for (ABCToken t : l.tokens) {
+			print(t);
+		}
+		ABCEnvironment e = ABCParser.parse(l.tokens);
+		//print(e);
+		//play(e);
+	}
+	
+	@Test
+	public void multiWithLeft() {
+		Lexer l = getBasicHeaderLexer();
+		//basic headers put us in C
+		l.readLine("|: z C E G c G E C |[1 [C8E8G8] :|[2 CDEFGABc |");
+		
+		ABCEnvironment e = ABCParser.parse(l.tokens);
+		//print(e);
+		//play(e);
+	}
+	
+	@Test
+	public void multiWithLeftAndMore() {
+		Lexer l = getBasicHeaderLexer();
+		//basic headers put us in C
+		l.readLine("|: z C E G c G E C |[1 [C8E8G8] :|[2 CDEFGABc ||: aaaa_aaaa :|");
 		
 		for (ABCToken t : l.tokens) {
 			print(t);
@@ -454,8 +504,7 @@ public class ABCParserTest {
 		play(e);
 	}
 	
-	//repeat, single, start of piece, right
-	//repeat, single, section, right
+	
 	//repeat, multi, left
 	//repeat, multi, beginning of peice
 	//repeat, multi, section

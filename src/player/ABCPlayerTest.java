@@ -46,11 +46,11 @@ public class ABCPlayerTest {
 	
 	@Test
 	public void barbieGirl() {
-		printAndPlay("sample_abc/little_night_music.abc");
+		//printAndPlay("sample_abc/little_night_music.abc");
 	}
 	
 	@Test
 	public void playTestHard() {
-		ABCPlayer.play("sample_abc/fur_elise.abc");
+		printAndPlay("sample_abc/fur_elise.abc");
 	}
 }

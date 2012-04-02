@@ -113,13 +113,14 @@ public class ABCParser {
 				
 				
 				//ASSUMING NO MID-BAR VOICE CHANGES
-				env.barDuration = new Fraction(0,1);
+				env.resetBar();
 				
 				if (!env.inBody) {
 					env.createVoice(token.voiceName);	
 				}
 				
-				env.curStack = env.voiceStackMap.get(token.voiceName);
+				env.switchVoice(token.voiceName);
+
 				break;
 				
 			case NOTE:
@@ -210,6 +211,7 @@ public class ABCParser {
 				
 				//close the old section, open the new section
 				env.newSection();
+				env.resetBar();
 				break;
 				
 			case STARTBAR:
@@ -221,29 +223,49 @@ public class ABCParser {
 			case STARTREPEAT:
 				env.checkBody();
 				
-				//if (env.inRepeat) {
-				//	throw new ABCParserException("Cannot have STARTREPEAT inside a repeat");
-				//}
-				
+				if (env.inRepeat) {
+					//get out of the repeat
+					env.curStack.pop();
+					//throw new ABCParserException("Cannot have STARTREPEAT inside a repeat");
+				}
+				env.newSection();
 				env.repeatizeTop();
 				env.inRepeat = true;
 				break;
 				
 			case MULTIENDING:
+				
+				env.checkBarDuration();
+				env.resetBar();
+				
+				
 				if (!env.inRepeat) {
 					env.repeatizeTop();
 					env.inRepeat = true;
 					env.newSection();
 				} else {
+					//im already in a repeat which means iv seen as lerftr repeat token
+					//so i just have to flip to the next section
+					env.newSection();
 					//i dont have to do anything... the preceeding endrepeat has to take care of it
 				}
 				
+				env.multiEndings = true;
 				//now close and open a section
 				break;
 				
 			case ENDSECTION:
 				//do nothing for now... we cannot have an end section without a start section..
 				//yuck
+				//clear multi endings?
+				env.multiEndings = false;
+				if (env.inRepeat) {
+					//pop off the repeat. try it.
+					env.curStack.pop();
+					env.inRepeat = false;
+					env.multiEndings = false;
+				}
+				env.checkBarDuration();
 				break;
 			
 			case ENDBAR:
@@ -253,8 +275,12 @@ public class ABCParser {
 				break;
 				
 			case ENDREPEAT:
+				
+				env.checkBarDuration();
+				env.resetBar();
+				
 				if (!env.inRepeat) {
-					//then no multi endings!
+					//then no multi endings and no left repeat
 					env.repeatizeTop();
 					//pops the first element of the new repeat off of the stack
 					env.curStack.pop();
@@ -262,8 +288,13 @@ public class ABCParser {
 					//closes the repeatable, starts a new section
 					env.newSection();
 				} else {
-					//then there have been multiendings...
-					env.newSection();
+					if (env.multiEndings) {
+						//env.newSection();//just flip the switch. NO. the next multi-ending will do it
+					} else {
+						env.curStack.pop();//clear the repeatable off
+						env.newSection();//FOOBAR
+					}
+
 				}
 				
 				
