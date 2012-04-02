@@ -69,9 +69,14 @@ public class ABCParser {
 							throw new ABCParserException("Meter header value invalid");
 						}
 						
-						env.meter = meter;
+						int numer = Integer.parseInt(match.group(1));
+						int denom = Integer.parseInt(match.group(2));
 						
+						meter = new Fraction(numer,denom);
 					}
+					
+					env.meter = meter;
+						
 					
 				} else if (key == 'Q') {
 					//the tempo header
@@ -116,7 +121,6 @@ public class ABCParser {
 				}
 				
 				env.curStack = env.voiceStackMap.get(token.voiceName);
-				System.out.println(env.curStack);
 				break;
 				
 			case NOTE:
@@ -218,9 +222,9 @@ public class ABCParser {
 			case STARTREPEAT:
 				env.checkBody();
 				
-				if (env.inRepeat) {
-					throw new ABCParserException("Cannot have STARTREPEAT inside a repeat");
-				}
+				//if (env.inRepeat) {
+				//	throw new ABCParserException("Cannot have STARTREPEAT inside a repeat");
+				//}
 				
 				env.repeatizeTop();
 				env.inRepeat = true;
