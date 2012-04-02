@@ -69,6 +69,52 @@ public class KeySignatureTest {
 		assertEquals(dNatural, FbMod.getPitch('D', 0));
 		assertEquals(highDflat,FbMod.getPitch('D', 1));
 	}
+	@Test
+	public void testAminor() {
+		KeySignature Am = new KeySignature("Am");
+		Pitch A = new Pitch('A');
+		Pitch B = new Pitch('B');
+		Pitch C = new Pitch('C');
+		Pitch D = new Pitch('D');
+		Pitch E = new Pitch('E');
+		Pitch F = new Pitch('F');
+		Pitch G = new Pitch('G');
+		assertEquals(A, Am.getPitch('A', 0));
+		assertEquals(B, Am.getPitch('B', 0));
+		assertEquals(C, Am.getPitch('C', 0));
+		assertEquals(D, Am.getPitch('D', 0));
+		assertEquals(E, Am.getPitch('E', 0));
+		assertEquals(F, Am.getPitch('F', 0));
+		assertEquals(G, Am.getPitch('G', 0));
+		KeySignature AmFlats = Am.fromAccidental('A', -1, 0);
+		AmFlats = AmFlats.fromAccidental('B', -1, 0);
+		AmFlats = AmFlats.fromAccidental('C', -1, 0);
+		AmFlats = AmFlats.fromAccidental('D', -1, 0);
+		AmFlats = AmFlats.fromAccidental('E', -1, 0);
+		AmFlats = AmFlats.fromAccidental('F', -1, 0);
+		AmFlats = AmFlats.fromAccidental('G', -1, 0);
+		assertEquals(A.accidentalTranspose(-1), AmFlats.getPitch('A', 0));
+		assertEquals(B.accidentalTranspose(-1), AmFlats.getPitch('B', 0));
+		assertEquals(C.accidentalTranspose(-1), AmFlats.getPitch('C', 0));
+		assertEquals(D.accidentalTranspose(-1), AmFlats.getPitch('D', 0));
+		assertEquals(E.accidentalTranspose(-1), AmFlats.getPitch('E', 0));
+		assertEquals(F.accidentalTranspose(-1), AmFlats.getPitch('F', 0));
+		assertEquals(G.accidentalTranspose(-1), AmFlats.getPitch('G', 0));
+		KeySignature AmSharps = Am.fromAccidental('A', 1, 0);
+		AmSharps = AmSharps.fromAccidental('B', 1, 0);
+		AmSharps = AmSharps.fromAccidental('C', 1, 0);
+		AmSharps = AmSharps.fromAccidental('D', 1, 0);
+		AmSharps = AmSharps.fromAccidental('E', 1, 0);
+		AmSharps = AmSharps.fromAccidental('F', 1, 0);
+		AmSharps = AmSharps.fromAccidental('G', 1, 0);
+		assertEquals(A.accidentalTranspose(1), AmSharps.getPitch('A', 0));
+		assertEquals(B.accidentalTranspose(1), AmSharps.getPitch('B', 0));
+		assertEquals(C.accidentalTranspose(1), AmSharps.getPitch('C', 0));
+		assertEquals(D.accidentalTranspose(1), AmSharps.getPitch('D', 0));
+		assertEquals(E.accidentalTranspose(1), AmSharps.getPitch('E', 0));
+		assertEquals(F.accidentalTranspose(1), AmSharps.getPitch('F', 0));
+		assertEquals(G.accidentalTranspose(1), AmSharps.getPitch('G', 0));
+	}
 	
 
 }
