@@ -32,7 +32,21 @@ public class ABCPlayerTest {
 	}
 	
 	@Test
+	public void playInvention() {
+		lexer.Lexer l = new lexer.Lexer("sample_abc/invention.abc");
+		ABCEnvironment e = ABCParser.parse(l.tokens);
+		System.out.println(e.toString());
+		ABCPlayer.playEnvironment(e);
+	}
+	
+	
+	@Test
 	public void playTestHard() {
-		//ABCPlayer.play("sample_abc/fur_elise.abc");
+		
+		lexer.Lexer l = new lexer.Lexer("sample_abc/fur_elise.abc");
+		ABCEnvironment e = ABCParser.parse(l.tokens);
+		System.out.println(e.toString());
+		
+		ABCPlayer.play("sample_abc/fur_elise.abc");
 	}
 }
