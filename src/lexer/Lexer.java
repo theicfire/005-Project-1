@@ -71,7 +71,7 @@ public class Lexer {
 		if (!line.isEmpty() && line.charAt(0) == 'V') {
 			// voice header
 			try {
-				String voiceName = line.substring(2);
+				String voiceName = line.substring(2).trim();
 				ABCToken token = ABCTokenBuilder.createBuilder()
 						.setLexeme(ABCToken.Lexeme.VOICE)
 						.setVoiceName(voiceName)
