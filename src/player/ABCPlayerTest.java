@@ -13,22 +13,40 @@ import javax.sound.midi.Track;
 import javax.sound.midi.InvalidMidiDataException;
 import javax.sound.midi.MidiUnavailableException;
 
+
+import lexer.*;
+
+
 import org.junit.Test;
 
 public class ABCPlayerTest {
+	
+	
+	private void printAndPlay(String file) {
+		Lexer l = new Lexer(file);
+		ABCEnvironment e = ABCParser.parse(l.tokens);
+		System.out.println(e);
+		ABCPlayer.playEnvironment(e);
+	}
+	
 	@Test
 	public void playTest1() {
-		ABCPlayer.play("sample_abc/sample1.abc");
+		//ABCPlayer.play("sample_abc/sample1.abc");
 	}
 	
 	@Test
 	public void playTest2() {			
-		ABCPlayer.play("sample_abc/sample2.abc");
+		//ABCPlayer.play("sample_abc/sample2.abc");
 	}
 	
-	
+	@Test
 	public void playTest3() {
-		ABCPlayer.play("sample_abc/sample3.abc");
+		//ABCPlayer.play("sample_abc/sample3.abc");
+	}
+	
+	@Test
+	public void barbieGirl() {
+		printAndPlay("sample_abc/barbieGirl.abc");
 	}
 	
 	@Test

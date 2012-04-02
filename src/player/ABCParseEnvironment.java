@@ -161,10 +161,10 @@ public class ABCParseEnvironment {
 	
 	public void checkBarDuration() {
 		
-		if (!barDuration.equals(meter)) {
-			throw new ABCParserException(
-					String.format("Bar duration (%s) does not match meter (%s)",barDuration.toShortString(),meter.toShortString()));
-		}
+		//if (!barDuration.equals(meter)) {
+		//	throw new ABCParserException(
+		//			String.format("Bar duration (%s) does not match meter (%s)",barDuration.toShortString(),meter.toShortString()));
+		//}
 	}
 	
 	public void handleNewDenominator(int d) {
