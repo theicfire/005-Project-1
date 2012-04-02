@@ -433,6 +433,14 @@ public class ABCParserTest {
 		assert false;
 	}
 	
+	//voices
+	@Test
+	public void multiVoiceTest() {
+		
+		
+		
+	}
+	
 	//tests still to write:
 	//repeat, single, left and right
 	//repeat, single, start of piece, right

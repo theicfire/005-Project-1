@@ -106,12 +106,17 @@ public class ABCParser {
 			
 			case VOICE:
 				
+				
+				//ASSUMING NO MID-BAR VOICE CHANGES
+				env.barDuration = new Fraction(0,1);
+				
+				System.out.println("Voice "+env.inBody + "-"+token.voiceName+'-');
 				if (!env.inBody) {
-					env.createVoice(token.voiceName);
-
-					
+					env.createVoice(token.voiceName);	
 				}
+				
 				env.curStack = env.voiceStackMap.get(token.voiceName);
+				System.out.println(env.curStack);
 				break;
 				
 			case NOTE:
