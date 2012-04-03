@@ -22,6 +22,7 @@ public class ABCPlayer {
 		Schedulable root = env.getTreeRoot();
 		root.accept(s);
 		try {
+			System.out.println(s.PLAYER.toString());
 			s.PLAYER.play();
 		} catch (MidiUnavailableException e) {
             e.printStackTrace();

@@ -71,7 +71,7 @@ public class Scheduler implements SchedulableVisitor{
 		int change = p.duration.times(TICKS_PER_QUARTER).toInt();
 		int finish = clock + change;
 		if (p.isNote)
-			PLAYER.addNote(p.midiNote, start, finish);
+			PLAYER.addNote(p.midiNote, start, change);
 		clock = finish;
 		
 	}
@@ -80,7 +80,7 @@ public class Scheduler implements SchedulableVisitor{
 		try {
 			this.PLAYER = new SequencePlayer(tempo, ticksPerQuarterNote);
 		} catch (MidiUnavailableException e) {
-            e.printStackTrace();		
+            e.printStackTrace();
 		} catch (InvalidMidiDataException e) {
             e.printStackTrace();		
 		}
