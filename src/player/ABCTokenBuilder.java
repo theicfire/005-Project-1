@@ -1,6 +1,5 @@
-package lexer;
+package player;
 
-import player.Fraction;
 
 public class ABCTokenBuilder {
 	private final ABCToken obj = new ABCToken();
