@@ -11,7 +11,6 @@ public class ABCTokenBuilder {
 	
 	public ABCToken build() {
 		done = true;
-//		obj.checkRep();
 		return obj;
 	}
 	

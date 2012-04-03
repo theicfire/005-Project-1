@@ -93,8 +93,6 @@ public class ABCParserTest {
 	}
 	
 	//we will need to stress test a lot of the header edge case stuff, but that can be done later
-	//TODO: stress test the headers
-	
 	
 	//ok, lets add a measure!
 	@Test
