@@ -44,6 +44,7 @@ public class ABCParseEnvironment {
 	//statestuff
 	boolean inBody = false;
 	boolean firstBar = true;
+	boolean badBar = false;
 	
 	boolean inRepeat = false;
 	boolean multiEndings = false;
@@ -54,7 +55,9 @@ public class ABCParseEnvironment {
 	//voice specific state stuff
 	HashMap<String,Boolean> voiceInRepeatMap = new HashMap<String,Boolean>();
 	HashMap<String,Boolean> voiceInMultiendingMap = new HashMap<String,Boolean>();
-
+	HashMap<String,Boolean> voiceFirstBarMap = new HashMap<String,Boolean>();
+	HashMap<String,Boolean> voiceBadBarMap = new HashMap<String,Boolean>();
+	
 	int tokenCount = 0;
 	int numTokens;
 	
@@ -113,8 +116,11 @@ public class ABCParseEnvironment {
 		Stack<TuneSequence> newStack = new Stack<TuneSequence>();
 		//linking the voice to it
 		voiceStackMap.put(voiceName, newStack);
+		
 		voiceInRepeatMap.put(voiceName,false);
 		voiceInMultiendingMap.put(voiceName,false);
+		voiceFirstBarMap.put(voiceName,false);
+		voiceBadBarMap.put(voiceName,false);
 		
 		//the base sequence for this voice
 		TuneSequence baseSequence = new TuneSequence();
@@ -133,9 +139,13 @@ public class ABCParseEnvironment {
 		
 		voiceInRepeatMap.put(curVoice, inRepeat);
 		voiceInMultiendingMap.put(curVoice, multiEndings);
+		voiceFirstBarMap.put(curVoice, multiEndings);
+		voiceBadBarMap.put(curVoice, badBar);
 		
 		inRepeat = voiceInRepeatMap.get(voice);
 		multiEndings = voiceInRepeatMap.get(voice);
+		firstBar = voiceFirstBarMap.get(voice);
+		badBar = voiceBadBarMap.get(voice);
 		
 		curVoice = voice;
 		
@@ -201,9 +211,17 @@ public class ABCParseEnvironment {
 			//	or barDuration is 0
 			//	or we are are the last token
 			if (! (barDuration.equals(meter) || barDuration.equals(0) || tokenCount == numTokens)) {
-				throw new ABCParserException(
-						String.format("Bar duration (%s) does not match meter (%s)",barDuration.toShortString(),meter.toShortString()));
+				badBar = true;
 			}
+		}
+	}
+	
+	public void checkBadBar() {
+		if (badBar) {
+			throw new ABCParserException(
+					String.format("Bar duration (%s) does not match meter (%s)"
+							,barDuration.toShortString()
+							,meter.toShortString()));
 		}
 	}
 	

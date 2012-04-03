@@ -18,7 +18,7 @@ public class ABCParser {
 		for (ABCToken token : tokenList) {
 			
 			env.incrTokenCount();
-			
+				
 			switch (token.lexeme) {
 				
 			//header handling is a bitch
@@ -120,6 +120,7 @@ public class ABCParser {
 				
 			case NOTE:
 				env.checkBody();
+				env.checkBadBar();
 				
 				//adds the note to the top of the current stack
 				Fraction duration = token.noteDuration;
@@ -133,6 +134,7 @@ public class ABCParser {
 				
 			case ACCIDENTAL:
 				env.checkBody();
+				env.checkBadBar();
 				
 				//replaces the barKeySig with the new one
 				env.barKeySig = env.barKeySig.fromAccidental(token.noteName,token.accModifier,token.noteOctave);
@@ -140,6 +142,7 @@ public class ABCParser {
 				
 			case REST:
 				env.checkBody();
+				env.checkBadBar();
 				
 				if (!env.inBody) {
 					env.switchToBody();
@@ -153,6 +156,7 @@ public class ABCParser {
 				
 			case STARTCHORD:
 				env.checkBody();
+				env.checkBadBar();
 				
 				Chord newChord = new Chord();
 				env.curStack.peek().add(newChord);
@@ -178,6 +182,7 @@ public class ABCParser {
 				
 			case STARTTUPLET:
 				env.checkBody();
+				env.checkBadBar();
 				
 				Tuple newTuplet = new Tuple(token.startTupletNoteCount);
 				
@@ -205,6 +210,8 @@ public class ABCParser {
 				
 			case STARTREPEAT:
 				env.checkBody();
+				env.resetBar();
+				env.checkBadBar();
 				
 				if (env.inRepeat) {
 					//get out of the repeat
