@@ -68,7 +68,14 @@ public class Lexer {
 	// given a line from the file, parse it
 	public void readLine(String line) {
 //		System.out.println("reading line" + line);
-		if (!line.isEmpty() && line.charAt(0) == 'V') {
+		if (line.indexOf('%') != -1) { // take out comments
+			System.out.println("found at " + line.indexOf('%'));
+			line = line.substring(0, line.indexOf('%'));
+		}
+		if (line.isEmpty()) {
+			return;
+		}
+		if (line.charAt(0) == 'V') {
 			// voice header
 			try {
 				String voiceName = line.substring(2).trim();
