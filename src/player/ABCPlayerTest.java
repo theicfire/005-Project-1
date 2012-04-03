@@ -39,4 +39,9 @@ public class ABCPlayerTest {
 	public void playTestHard() {
 		printAndPlay("sample_abc/invention.abc");
 	}
+	
+	@Test
+	public void playFur() {
+		printAndPlay("sample_abc/fur_elise.abc");
+	}
 }

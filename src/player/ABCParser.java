@@ -12,10 +12,12 @@ public class ABCParser {
 	public static ABCEnvironment parse(ArrayList<ABCToken> tokenList) {
 		
 		ABCParseEnvironment env =  new ABCParseEnvironment();		
-		
-		
+		env.numTokens = tokenList.size();
+			
 		//ok. lets parse!
 		for (ABCToken token : tokenList) {
+			
+			env.incrTokenCount();
 			
 			switch (token.lexeme) {
 				
@@ -296,10 +298,6 @@ public class ABCParser {
 			
 		}
 		
-		//one last measure test, only if duration != 0
-		if (!env.barDuration.equals(0)) {
-			env.checkBarDuration();
-		}
 		
 		TuneParallel rootParallel = new TuneParallel();
 		for (TuneSequence s : env.baseSequences) {

@@ -55,6 +55,8 @@ public class ABCParseEnvironment {
 	HashMap<String,Boolean> voiceInRepeatMap = new HashMap<String,Boolean>();
 	HashMap<String,Boolean> voiceInMultiendingMap = new HashMap<String,Boolean>();
 
+	int tokenCount = 0;
+	int numTokens;
 	
 	Fraction tupleMultiplier = null;
 	int tupletCount;
@@ -73,6 +75,9 @@ public class ABCParseEnvironment {
 	
 	//ticksPerDefaultNote * tempo = defaultNotes per minute
 	
+	public void incrTokenCount() {
+		tokenCount++;
+	}
 	
 	public void switchToBody() {
 		inBody = true;
@@ -190,8 +195,12 @@ public class ABCParseEnvironment {
 		if (firstBar) {
 			firstBar = false;
 		} else {
-		
-			if (! (barDuration.equals(meter) || barDuration.equals(0))) {
+			//ugly.
+			//if not
+			//	barDuration is OK
+			//	or barDuration is 0
+			//	or we are are the last token
+			if (! (barDuration.equals(meter) || barDuration.equals(0) || tokenCount == numTokens)) {
 				throw new ABCParserException(
 						String.format("Bar duration (%s) does not match meter (%s)",barDuration.toShortString(),meter.toShortString()));
 			}
