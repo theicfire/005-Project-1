@@ -46,7 +46,7 @@ public class ABCPlayerTest {
 	
 	@Test
 	public void barbieGirl() {
-		printAndPlay("sample_abc/barbieGirl.abc");
+		//ABCPlayer.play("sample_abc/barbieGirl.abc");
 	}
 	
 	@Test
