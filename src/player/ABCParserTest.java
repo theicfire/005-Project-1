@@ -496,6 +496,17 @@ public class ABCParserTest {
 		//basic headers put us in C
 		l.readLine("|: z C E G c G E C |[1 [C8E8G8] :|[2 CDEFGABc ||: aaaa_aaaa :|");
 		
+		ABCEnvironment e = ABCParser.parse(l.tokens);
+		//print(e);
+		//play(e);
+	}
+	
+	@Test
+	public void weirdTest() {
+		Lexer l = getBasicHeaderLexer();
+		//basic headers put us in C
+		l.readLine("e/g/c'/b/ a/g/f/e/ d/g/f/d/|e/f/e/^d/ e/B/e/d/ e/B/e/d/|e3 Be^d|e3 Be z|");
+		
 		for (ABCToken t : l.tokens) {
 			print(t);
 		}
@@ -503,7 +514,6 @@ public class ABCParserTest {
 		print(e);
 		play(e);
 	}
-	
 	
 	//repeat, multi, left
 	//repeat, multi, beginning of peice
@@ -527,5 +537,7 @@ public class ABCParserTest {
 	
 	//and i guess all the error cases too!!!! FUCK
 	//gah. thats a lot of work.
+	
+	
 	
 }
