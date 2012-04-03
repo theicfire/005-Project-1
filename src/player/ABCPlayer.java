@@ -2,7 +2,6 @@ package player;
 
 import javax.sound.midi.MidiUnavailableException;
 
-
 public class ABCPlayer {
 	public static void play(String filename) {
 		Lexer l = new Lexer(filename);

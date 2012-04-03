@@ -26,6 +26,4 @@ public class Tuple extends TuneSequence {
 	public void accept(SchedulableVisitor v) {
 		v.visit(this);
 	}
-	
-	
 }

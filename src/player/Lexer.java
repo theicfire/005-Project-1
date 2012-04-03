@@ -64,7 +64,6 @@ public class Lexer {
 
 	// given a line from the file, parse it
 	public void readLine(String line) {
-//		System.out.println("reading line" + line);
 		if (line.indexOf('%') != -1) { // take out comments
 			line = line.substring(0, line.indexOf('%'));
 		}
@@ -216,15 +215,7 @@ public class Lexer {
 					}
 					
 					Fraction frac = makeFraction(numerator,denom);
-					/*
-					if (chordFraction != null) {
-						frac = chordFraction;
-					} else {
-						frac = makeFraction(numerator, denom);
-					}
-					*/
-					
-					
+
 					// accidental stuff
 					if (!accModifiers.isEmpty()) {
 						for (int j = 0; j < accModifiers.length(); j++) {
@@ -382,7 +373,6 @@ public class Lexer {
 	}
 	
 
-	// TODO: remove
 	public static void main(String [] args) {
 		Lexer l = new Lexer("sample_abc/paddy.abc");
 		for (ABCToken t : l.tokens) {

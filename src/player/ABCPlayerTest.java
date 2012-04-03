@@ -12,27 +12,27 @@ public class ABCPlayerTest {
 	
 	@Test
 	public void playTest1() {
-		//ABCPlayer.play("sample_abc/sample1.abc");
+		ABCPlayer.play("sample_abc/sample1.abc");
 	}
 	
 	@Test
 	public void playTest2() {			
-		//ABCPlayer.play("sample_abc/sample2.abc");
+		ABCPlayer.play("sample_abc/sample2.abc");
 	}
 	
 	@Test
 	public void playTest3() {
-		//ABCPlayer.play("sample_abc/sample3.abc");
+		ABCPlayer.play("sample_abc/sample3.abc");
 	}
 	
 	@Test
 	public void barbieGirl() {
-		//ABCPlayer.play("sample_abc/barbieGirl.abc");
+		ABCPlayer.play("sample_abc/barbieGirl.abc");
 	}
 	
 	@Test
 	public void yesterDay() {
-		//printAndPlay("sample_abc/yesterday.abc");
+		printAndPlay("sample_abc/yesterday.abc");
 	}
 	
 	@Test
