@@ -48,7 +48,6 @@ public class ABCParserTest {
 		
 		l.readLine("X:3");
 		l.readLine("T:foobar");
-		l.readLine("Q:300");
 		l.readLine("K:C");
 		
 		

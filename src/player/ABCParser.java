@@ -186,19 +186,7 @@ public class ABCParser {
 				env.curStack.push(newTuplet);
 				env.inTuplet = true;
 				break;
-				
-			case ENDTUPLET:
-				if (!env.inTuplet) {
-					throw new ABCParserException("End tuplet cannot come before new tuplet!");
-				}
-				
-				env.tupleMultiplier = null;
-				env.tupletCount = 0;
-				
-				env.curStack.pop();
-				env.inTuplet = false;
-				break;
-				
+
 			case STARTSECTION:
 				env.checkBody();
 				
@@ -292,6 +280,9 @@ public class ABCParser {
 				
 				
 				break;
+			
+			default:
+				throw new ABCParserException("Unhandled token!!");
 				
 				
 			}
