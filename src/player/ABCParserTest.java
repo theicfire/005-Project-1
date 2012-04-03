@@ -35,7 +35,7 @@ public class ABCParserTest {
 	Fraction three = new Fraction(3,1);
 	Fraction four = new Fraction(4,1);
 	
-	boolean playAll = true;
+	boolean playAll = false;
 	
 	
 	//so i can hear things!
@@ -375,10 +375,6 @@ public class ABCParserTest {
 		//basic headers put us in C
 		l.readLine("F F ^F F _F F =F F");
 		
-		for (ABCToken t : l.tokens) {
-			print(t);
-		}
-		
 		ABCEnvironment e = ABCParser.parse(l.tokens);
 
 		if (playAll) play(e);
@@ -442,9 +438,83 @@ public class ABCParserTest {
 	}
 	
 	//tests still to write:
+	
 	//repeat, single, left and right
+	@Test
+	public void singleLeftRight() {
+		Lexer l = getBasicHeaderLexer();
+		//basic headers put us in C
+		l.readLine("a b CCCCCC |: C E G c G E C [CEG] :|");
+		
+		ABCEnvironment e = ABCParser.parse(l.tokens);
+		//print(e);
+		//play(e);
+	}
+	
 	//repeat, single, start of piece, right
+	@Test
+	public void startOfPieceRight() {
+		Lexer l = getBasicHeaderLexer();
+		//basic headers put us in C
+		l.readLine("C E G c G E C [CEG] :|");
+		
+		ABCEnvironment e = ABCParser.parse(l.tokens);
+		//print(e);
+		//play(e);
+	}
+	
+
 	//repeat, single, section, right
+	@Test
+	public void sectionPieceRight() {
+		Lexer l = getBasicHeaderLexer();
+		//basic headers put us in C
+		l.readLine("aaaaaaaa |]|: C E G c G E C [CEG] :|");
+		
+		for (ABCToken t : l.tokens) {
+			print(t);
+		}
+		ABCEnvironment e = ABCParser.parse(l.tokens);
+		//print(e);
+		//play(e);
+	}
+	
+	@Test
+	public void multiWithLeft() {
+		Lexer l = getBasicHeaderLexer();
+		//basic headers put us in C
+		l.readLine("|: z C E G c G E C |[1 [C8E8G8] :|[2 CDEFGABc |");
+		
+		ABCEnvironment e = ABCParser.parse(l.tokens);
+		//print(e);
+		//play(e);
+	}
+	
+	@Test
+	public void multiWithLeftAndMore() {
+		Lexer l = getBasicHeaderLexer();
+		//basic headers put us in C
+		l.readLine("|: z C E G c G E C |[1 [C8E8G8] :|[2 CDEFGABc ||: aaaa_aaaa :|");
+		
+		ABCEnvironment e = ABCParser.parse(l.tokens);
+		//print(e);
+		//play(e);
+	}
+	
+	@Test
+	public void weirdTest() {
+		Lexer l = getBasicHeaderLexer();
+		//basic headers put us in C
+		l.readLine("e/g/c'/b/ a/g/f/e/ d/g/f/d/|e/f/e/^d/ e/B/e/d/ e/B/e/d/|e3 Be^d|e3 Be z|");
+		
+		for (ABCToken t : l.tokens) {
+			print(t);
+		}
+		ABCEnvironment e = ABCParser.parse(l.tokens);
+		print(e);
+		play(e);
+	}
+	
 	//repeat, multi, left
 	//repeat, multi, beginning of peice
 	//repeat, multi, section
@@ -467,5 +537,7 @@ public class ABCParserTest {
 	
 	//and i guess all the error cases too!!!! FUCK
 	//gah. thats a lot of work.
+	
+	
 	
 }
