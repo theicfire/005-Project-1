@@ -17,7 +17,7 @@ public class Main {
 	 * @param file the name of input abc file
 	 */
 	public static void play(String file) {
-		// YOUR CODE HERE
+		ABCPlayer.play(file);
 	}
 	
 	public static void main(String [] args) {

@@ -27,6 +27,8 @@ public class ABCParseEnvironment {
 	HashMap<Character,String> headers = new HashMap<Character,String>();
 	
 	HashMap<String,Stack<TuneSequence>> voiceStackMap = new HashMap<String,Stack<TuneSequence>>();
+	String curVoice = null;
+	
 	Stack<TuneSequence> baseSequences = new Stack<TuneSequence>();
 	Stack<TuneSequence> curStack = null;
 	
@@ -41,9 +43,17 @@ public class ABCParseEnvironment {
 	
 	//statestuff
 	boolean inBody = false;
+	
 	boolean inRepeat = false;
+	boolean multiEndings = false;
+	
 	boolean inChord = false;
 	boolean inTuplet = false;
+	
+	//voice specific state stuff
+	HashMap<String,Boolean> voiceInRepeatMap = new HashMap<String,Boolean>();
+	HashMap<String,Boolean> voiceInMultiendingMap = new HashMap<String,Boolean>();
+
 	
 	Fraction tupleMultiplier = null;
 	int tupletCount;
@@ -97,6 +107,8 @@ public class ABCParseEnvironment {
 		Stack<TuneSequence> newStack = new Stack<TuneSequence>();
 		//linking the voice to it
 		voiceStackMap.put(voiceName, newStack);
+		voiceInRepeatMap.put(voiceName,false);
+		voiceInMultiendingMap.put(voiceName,false);
 		
 		//the base sequence for this voice
 		TuneSequence baseSequence = new TuneSequence();
@@ -108,6 +120,19 @@ public class ABCParseEnvironment {
 		newStack.push(firstSequence);
 		
 		return newStack;
+	}
+	
+	public void switchVoice(String voice) {
+		curStack = voiceStackMap.get(voice);
+		
+		voiceInRepeatMap.put(curVoice, inRepeat);
+		voiceInMultiendingMap.put(curVoice, multiEndings);
+		
+		inRepeat = voiceInRepeatMap.get(voice);
+		multiEndings = voiceInRepeatMap.get(voice);
+		
+		curVoice = voice;
+		
 	}
 	
 	public void repeatizeTop() {
