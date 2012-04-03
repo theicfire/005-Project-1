@@ -1,6 +1,5 @@
-package lexer;
+package player;
 
-import player.Fraction;
 
 public class ABCToken {
 	public static enum Lexeme {

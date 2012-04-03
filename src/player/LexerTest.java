@@ -1,12 +1,6 @@
-package lexer;
-
+package player;
 import static org.junit.Assert.*;
-
-import java.util.Arrays;
-
 import org.junit.Test;
-
-import player.Fraction;
 
 public class LexerTest {
 	@Test

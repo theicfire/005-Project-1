@@ -1,6 +1,5 @@
 package player;
 
-import lexer.Lexer;
 
 /**
  * Main entry point of your application.

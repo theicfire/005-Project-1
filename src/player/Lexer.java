@@ -1,15 +1,12 @@
-package lexer;
+package player;
 
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import player.Fraction;
 
 public class Lexer {
 
@@ -69,7 +66,6 @@ public class Lexer {
 	public void readLine(String line) {
 //		System.out.println("reading line" + line);
 		if (line.indexOf('%') != -1) { // take out comments
-			System.out.println("found at " + line.indexOf('%'));
 			line = line.substring(0, line.indexOf('%'));
 		}
 		if (line.isEmpty()) {
