@@ -489,7 +489,7 @@ public class ABCParserTest {
 		//play(e);
 	}
 	
-	@Test
+	
 	public void weirdTest() {
 		Lexer l = getBasicHeaderLexer();
 		//basic headers put us in C

@@ -43,6 +43,7 @@ public class ABCParseEnvironment {
 	
 	//statestuff
 	boolean inBody = false;
+	boolean firstBar = true;
 	
 	boolean inRepeat = false;
 	boolean multiEndings = false;
@@ -186,10 +187,15 @@ public class ABCParseEnvironment {
 	
 	public void checkBarDuration() {
 		
-		//if (!barDuration.equals(meter)) {
-		//	throw new ABCParserException(
-		//			String.format("Bar duration (%s) does not match meter (%s)",barDuration.toShortString(),meter.toShortString()));
-		//}
+		if (firstBar) {
+			firstBar = false;
+		} else {
+		
+			if (! (barDuration.equals(meter) || barDuration.equals(0))) {
+				throw new ABCParserException(
+						String.format("Bar duration (%s) does not match meter (%s)",barDuration.toShortString(),meter.toShortString()));
+			}
+		}
 	}
 	
 	public void handleNewDenominator(int d) {
