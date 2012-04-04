@@ -44,4 +44,15 @@ public class ABCPlayerTest {
 	public void playFur() {
 		printAndPlay("sample_abc/fur_elise.abc");
 	}
+	@Test
+     public void testBadLineLengths() {
+         try{
+             ABCPlayer.play("broken.abc");
+             assert false;
+         } catch (ABCParserException e) {
+             assert true;
+         }
+   }
+	   
+
 }
